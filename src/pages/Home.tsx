@@ -14,22 +14,15 @@ export function Home() {
 		}
 		const roomReference = await database.ref(`rooms/`).get();
 		if (!roomReference.exists()) {
-			// cria sala e entra nela
-			const firebaseRoom = await database.ref(`rooms/`).push({
-				players: [
-					{
-						name: name,
-					},
-				],
-			});
-			history.push(`/rooms/${firebaseRoom.key}`);
+			// cria sala e seta o usuário dentro dela
+			const firebaseRoom = await database.ref(`rooms/`).push({createdAt: new Date().toISOString().slice(0, 10)})
+			await database.ref(`rooms/${firebaseRoom.key}/players`).push({name: name})
 		} else {
 			// pega o ID da primeira sala e entra nela
 			const room = await database.ref("rooms").get();
 			await database.ref(`rooms/${Object.keys(room.val())[0]}/players`).push({
 				name: name,
 			});
-			// history.push(`/rooms/${Object.keys(room.val())[0]}`);
 			history.push({
 				pathname: `/rooms/${Object.keys(room.val())[0]}`,
 				state: {roomId: Object.keys(room.val())[0]}
