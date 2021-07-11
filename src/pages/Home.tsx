@@ -1,12 +1,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { database, firebase } from "../services/firebase";
+import { v4 as uuidv4 } from 'uuid';
 
 export function Home() {
 	const history = useHistory();
 	const [name, setName] = useState("");
 
 	async function handleLogin(event: FormEvent) {
+		// console.log("uid", uuidv4())
 		event.preventDefault();
 
 		if (!name) {

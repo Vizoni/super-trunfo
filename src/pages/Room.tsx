@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { database, firebase } from "../services/firebase";
 import { useHistory, useLocation } from "react-router-dom";
 
-type PlayersInTheRoom = {
-	item: object;
-	// name: string;
+type PlayerInTheRoom = {
+	id: string;
+	name: string;
 }
 
 export function Room() {
@@ -18,33 +18,31 @@ export function Room() {
 	useEffect(() => {
 		getPlayersInTheCurrentRoom(history.location.state.roomId)
 	}, [])
-
+	
 	function getPlayersInTheCurrentRoom(roomId: any) {
-		// return await database.ref(`rooms/${roomId}`).get();
 		const playersRef = database.ref(`rooms/${roomId}/players`)
-		playersRef.once('value', (playerList: any) => {
-			console.log("VALOR", playerList.val(), Object.getOwnPropertyNames(playerList.val()), typeof(playerList.val()))
-			// setPlayersList([...playersList, playerList.val() as any])
+		playersRef.on('value', (playerList: any) => {
+			const playersTransformedToArray = Object.entries(playerList.val())
+			let arrayAux: PlayerInTheRoom[] = []
+			playersTransformedToArray.forEach((element: Array<any>) => {
+				const player: PlayerInTheRoom = {
+					id: element[0],
+					name: element[1].name
+				}
+				arrayAux.push(player)
+			}); 
+			setPlayersList(arrayAux as any)
+			
 		})
 	}
-
-	function transformPlayerObject(player: any) {
-		
-	}
-
-	useEffect(() => {
-		// alert("entrou novo player")
-		// console.log("atualizou playrs", playersList)
-	}, [playersList])
 
 	return (
 		<>
 		<h1>Usuários logados:</h1>
 		<div>
-		{ playersList.map((player) => {
+		{ playersList.map((player: PlayerInTheRoom) => {
 			return (
-				// <h3>{player.name}</h3>
-				<h3>kkk</h3>
+				<h3>{player.name}</h3>
 			)
 		}) }
 		</div>
