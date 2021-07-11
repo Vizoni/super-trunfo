@@ -5,6 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 type PlayerInTheRoom = {
 	id: string;
 	name: string;
+	// createdAt: string;
 }
 
 export function Room() {
@@ -27,7 +28,7 @@ export function Room() {
 			playersTransformedToArray.forEach((element: Array<any>) => {
 				const player: PlayerInTheRoom = {
 					id: element[0],
-					name: element[1].name
+					name: element[1].name,
 				}
 				arrayAux.push(player)
 			}); 

@@ -19,7 +19,10 @@ export function Home() {
 			// cria sala e add o usuário à sala
 			console.log("data agora", new Date().toISOString())
 			const firebaseRoom = await database.ref(`rooms/`).push({createdAt: new Date().toISOString().slice(0, 10)})
-			await database.ref(`rooms/${firebaseRoom.key}/players`).push({name: name})
+			await database.ref(`rooms/${firebaseRoom.key}/players`).push({
+				name: name, 
+				createdAt: new Date().toISOString().slice(0, 10)
+			})
 			history.push({
 				pathname: `/rooms/${firebaseRoom.key}`,
 				state: {roomId: firebaseRoom.key}
@@ -29,6 +32,7 @@ export function Home() {
 			const room = await database.ref("rooms").get();
 			await database.ref(`rooms/${Object.keys(room.val())[0]}/players`).push({
 				name: name,
+				createdAt: new Date().toISOString().slice(0, 10)
 			});
 			history.push({
 				pathname: `/rooms/${Object.keys(room.val())[0]}`,
