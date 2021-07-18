@@ -16,12 +16,13 @@ export function Home() {
 		}
 		const roomReference = await database.ref(`rooms/`).get();
 		if (!roomReference.exists()) {
-			// cria sala e add o usuário à sala
-			console.log("data agora", new Date().toISOString())
+			// cria o nó da sala no banco
 			const firebaseRoom = await database.ref(`rooms/`).push({createdAt: new Date().toISOString().slice(0, 10)})
+			// depois da sala criada no banco, seta o nó PLAYERS, pra adicionar o player novo que está chegando
 			await database.ref(`rooms/${firebaseRoom.key}/players`).push({
 				name: name, 
 				createdAt: new Date().toISOString().slice(0, 10)
+				// playersCounter: 1
 			})
 			history.push({
 				pathname: `/rooms/${firebaseRoom.key}`,
@@ -30,6 +31,10 @@ export function Home() {
 		} else {
 			// pega o ID da primeira sala e entra nela
 			const room = await database.ref("rooms").get();
+			/*
+				Aqui precisa fazer um if (room.val().playersCounter >= 2) -> não pode entrar
+			*/
+			console.log("ROOM", room.val())
 			await database.ref(`rooms/${Object.keys(room.val())[0]}/players`).push({
 				name: name,
 				createdAt: new Date().toISOString().slice(0, 10)
