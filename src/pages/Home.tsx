@@ -1,11 +1,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { database, firebase } from "../services/firebase";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { usePlayer } from "../hooks/usePlayer";
 
 export function Home() {
 	const history = useHistory();
 	const [name, setName] = useState("");
+
+	const { player, setPlayer } = usePlayer();
 
 	async function handleLogin(event: FormEvent) {
 		// console.log("uid", uuidv4())
@@ -17,16 +20,18 @@ export function Home() {
 		const roomReference = await database.ref(`rooms/`).get();
 		if (!roomReference.exists()) {
 			// cria o nó da sala no banco
-			const firebaseRoom = await database.ref(`rooms/`).push({createdAt: new Date().toISOString().slice(0, 10)})
+			const firebaseRoom = await database
+				.ref(`rooms/`)
+				.push({ createdAt: new Date().toISOString().slice(0, 10) });
 			// depois da sala criada no banco, seta o nó PLAYERS, pra adicionar o player novo que está chegando
 			await database.ref(`rooms/${firebaseRoom.key}/players`).push({
-				name: name, 
-				createdAt: new Date().toISOString().slice(0, 10)
+				name: name,
+				createdAt: new Date().toISOString().slice(0, 10),
 				// playersCounter: 1
-			})
+			});
 			history.push({
 				pathname: `/rooms/${firebaseRoom.key}`,
-				state: {roomId: firebaseRoom.key}
+				state: { roomId: firebaseRoom.key },
 			});
 		} else {
 			// pega o ID da primeira sala e entra nela
@@ -34,14 +39,14 @@ export function Home() {
 			/*
 				Aqui precisa fazer um if (room.val().playersCounter >= 2) -> não pode entrar
 			*/
-			console.log("ROOM", room.val())
+			console.log("ROOM", room.val());
 			await database.ref(`rooms/${Object.keys(room.val())[0]}/players`).push({
 				name: name,
-				createdAt: new Date().toISOString().slice(0, 10)
+				createdAt: new Date().toISOString().slice(0, 10),
 			});
 			history.push({
 				pathname: `/rooms/${Object.keys(room.val())[0]}`,
-				state: {roomId: Object.keys(room.val())[0]}
+				state: { roomId: Object.keys(room.val())[0] },
 			});
 		}
 	}
@@ -54,6 +59,7 @@ export function Home() {
 					placeholder="Informe o seu nome"
 					value={name}
 					onChange={(event) => setName(event.target.value)}
+					// onChange={(event) => setPlayer({ name: event.target.value })}
 				/>
 				<button type="submit" disabled={!name}>
 					Entrar na sala
