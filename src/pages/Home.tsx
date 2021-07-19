@@ -6,48 +6,44 @@ import { usePlayer } from "../hooks/usePlayer";
 
 export function Home() {
 	const history = useHistory();
-	const [name, setName] = useState("");
 
 	const { player, setPlayer } = usePlayer();
 
 	async function handleLogin(event: FormEvent) {
-		// console.log("uid", uuidv4())
 		event.preventDefault();
 
-		if (!name) {
+		if (!player) {
 			return;
 		}
 		const roomReference = await database.ref(`rooms/`).get();
+		console.log("ROOM", roomReference.val());
 		if (!roomReference.exists()) {
 			// cria o nó da sala no banco
-			const firebaseRoom = await database
-				.ref(`rooms/`)
-				.push({ createdAt: new Date().toISOString().slice(0, 10) });
-			// depois da sala criada no banco, seta o nó PLAYERS, pra adicionar o player novo que está chegando
-			await database.ref(`rooms/${firebaseRoom.key}/players`).push({
-				name: name,
+			const firebaseRoom = await database.ref(`rooms/`).push({
 				createdAt: new Date().toISOString().slice(0, 10),
-				// playersCounter: 1
+				playersCounter: 1,
 			});
+			// depois da sala criada no banco, seta o nó PLAYERS, pra adicionar o player novo que está chegando
+			await database.ref(`rooms/${firebaseRoom.key}/players`).push(player);
 			history.push({
 				pathname: `/rooms/${firebaseRoom.key}`,
 				state: { roomId: firebaseRoom.key },
 			});
-		} else {
+		} else if (roomReference.val().playersCounter < 2) {
+			database.ref(`rooms/`).set({
+				...roomReference.val(),
+				playersCounter: roomReference.val().playersCounter + 1,
+			});
 			// pega o ID da primeira sala e entra nela
-			const room = await database.ref("rooms").get();
-			/*
-				Aqui precisa fazer um if (room.val().playersCounter >= 2) -> não pode entrar
-			*/
-			console.log("ROOM", room.val());
-			await database.ref(`rooms/${Object.keys(room.val())[0]}/players`).push({
-				name: name,
-				createdAt: new Date().toISOString().slice(0, 10),
-			});
+			await database
+				.ref(`rooms/${Object.keys(roomReference.val())[0]}/players`)
+				.push(player);
 			history.push({
-				pathname: `/rooms/${Object.keys(room.val())[0]}`,
-				state: { roomId: Object.keys(room.val())[0] },
+				pathname: `/rooms/${Object.keys(roomReference.val())[0]}`,
+				state: { roomId: Object.keys(roomReference.val())[0] },
 			});
+		} else {
+			alert("Não é possível entrar, chegamos ao máximo de players na sala: 2.");
 		}
 	}
 
@@ -57,11 +53,17 @@ export function Home() {
 				<input
 					type="text"
 					placeholder="Informe o seu nome"
-					value={name}
-					onChange={(event) => setName(event.target.value)}
-					// onChange={(event) => setPlayer({ name: event.target.value })}
+					value={player ? player.name : ""}
+					onChange={(event) =>
+						setPlayer({
+							id: "",
+							name: event.target.value,
+							createdAt: new Date().toISOString().slice(0, 10),
+							deck: [],
+						})
+					}
 				/>
-				<button type="submit" disabled={!name}>
+				<button type="submit" disabled={!player}>
 					Entrar na sala
 				</button>
 			</form>
