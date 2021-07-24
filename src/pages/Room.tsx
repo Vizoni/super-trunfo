@@ -28,8 +28,8 @@ export function Room() {
 					setPlayer({
 						...player,
 						id: element[0],
-						createdAt: element[1].createdAt,
-						deck: [],
+						// createdAt: element[1].createdAt,
+						// deck: [],
 					});
 				}
 				const singlePlayer: Player = {
