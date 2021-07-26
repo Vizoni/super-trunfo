@@ -3,12 +3,12 @@ import { database, firebase } from "../services/firebase";
 import { useHistory, useLocation } from "react-router-dom";
 import { Game } from "./Game";
 import { Player } from "../interfaces/Player";
-import { usePlayer } from "../hooks/usePlayer";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 export function Room() {
 	const history = useHistory() as any;
 	const [playersList, setPlayersList] = useState<Player[]>([]);
-	const { player, setPlayer } = usePlayer();
+	const { currentUser, setCurrentUser } = useCurrentUser();
 	// const [playersList, setPlayersList] = useState<Array<Player>>([]);
 	// const [roomId, setRoomId] = useState('');
 
@@ -24,9 +24,9 @@ export function Room() {
 			let arrayAux: Array<Player> = [];
 			playersTransformedToArray.forEach((element: Array<any>) => {
 				// seta o player atual com as infos que precisa
-				if (player && player.name == element[1].name) {
-					setPlayer({
-						...player,
+				if (currentUser && currentUser.name == element[1].name) {
+					setCurrentUser({
+						...currentUser,
 						id: element[0],
 						// createdAt: element[1].createdAt,
 						// deck: [],

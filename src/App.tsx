@@ -3,13 +3,13 @@ import { Home } from "./pages/Home";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Room } from "./pages/Room";
-import { PlayerContextProvider } from "./contexts/Player";
+import { CurrentUserContextProvider } from "./contexts/CurrentUser";
 import { RoomContextProvider } from "./contexts/Room";
 
 function App() {
 	return (
 		<BrowserRouter>
-			<PlayerContextProvider>
+			<CurrentUserContextProvider>
 				<RoomContextProvider>
 					{/* O switch é pra garantir que ele só vai renderizar uma rota */}
 					<Switch>
@@ -18,7 +18,7 @@ function App() {
 						<Route path="/rooms/:id" component={Room}></Route>
 					</Switch>
 				</RoomContextProvider>
-			</PlayerContextProvider>
+			</CurrentUserContextProvider>
 		</BrowserRouter>
 	);
 }

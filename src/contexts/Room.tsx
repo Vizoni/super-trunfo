@@ -1,5 +1,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { usePlayer } from "../hooks/usePlayer";
+import { v4 as uuidv4 } from "uuid";
+
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import { Player } from "../interfaces/Player";
 import { database, firebase } from "../services/firebase";
 
@@ -26,7 +28,7 @@ type Room = {
 export const RoomContext = React.createContext({} as RoomContextType);
 
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
-	const { player } = usePlayer();
+	const { currentUser } = useCurrentUser();
 	const [room, setRoom] = useState<Room | undefined>();
 
 	useEffect(() => {
