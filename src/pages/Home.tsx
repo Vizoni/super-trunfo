@@ -5,43 +5,60 @@ import { v4 as uuidv4 } from "uuid";
 import { database, firebase } from "../services/firebase";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useRoom } from "../hooks/useRoom";
+import { Player } from "../interfaces/Player";
 
 export function Home() {
 	const history = useHistory();
 
 	const { currentUser, setCurrentUser } = useCurrentUser();
-	const { room, setRoom, createRoom, addNewPlayer } = useRoom();
+	const { room, setRoom, createRoom, addSecondPlayer, getRoomById } = useRoom();
+	const [roomId, setRoomId] = useState<string>();
+
+	async function handleCreateRoom(event: FormEvent) {
+		event.preventDefault();
+
+		const newPlayer: Player = {
+			createdAt: new Date().toISOString().slice(0, 10),
+			deck: [],
+		};
+		const newRoom = {
+			isOpen: true,
+			createdAt: new Date().toISOString().slice(0, 10),
+			playersCounter: 1,
+			players: [],
+			turn: "Player 1",
+		};
+
+		const key = await createRoom(newRoom, newPlayer);
+		setCurrentUser(newPlayer);
+		history.push({
+			pathname: `/rooms/${key}`,
+			state: { roomId: key },
+		});
+	}
 
 	async function handleLogin(event: FormEvent) {
 		event.preventDefault();
-
-		if (!currentUser) {
+		if (!roomId) return;
+		const newPlayer: Player = {
+			createdAt: new Date().toISOString().slice(0, 10),
+			deck: [],
+		};
+		const foundRoom = await getRoomById(roomId);
+		console.log("handle login ", foundRoom);
+		if (!foundRoom.isOpen) {
+			alert("Sala cheia");
 			return;
 		}
-
-		// TO DO:
-		// 1 - CRIAR UM CONTEXTO DE USUARIO (CURRENT USER) -> OU USAR O PLAYER?
-		// 2 - DEPOIS DISSO, FAZER AS 2 VISOES DO PLAYER DAS CARTAS (NG-IF DO ANGULAR)
-
-		// não existe sala, precisa criar
-		if (!room) {
-			console.log("Home - Criando sala...");
-			const roomId = await createRoom(currentUser);
+		if (foundRoom) {
+			await addSecondPlayer(roomId, newPlayer);
+			setCurrentUser(newPlayer);
 			history.push({
 				pathname: `/rooms/${roomId}`,
 				state: { roomId: roomId },
 			});
-		} else if (room.playersCounter < 2) {
-			// sala existe, vai ver se já está cheia
-			console.log(" Home - Adicionando player...");
-			addNewPlayer(currentUser);
-			history.push({
-				pathname: `/rooms/${room.id}`,
-				state: { roomId: room.id },
-			});
 		} else {
-			// sala está cheia!
-			alert("nao pode entrar...");
+			alert(`Não localizamos a sala informada.`);
 		}
 	}
 
@@ -50,20 +67,13 @@ export function Home() {
 			<form onSubmit={handleLogin}>
 				<input
 					type="text"
-					placeholder="Informe o seu nome"
-					value={currentUser ? currentUser.name : ""}
-					onChange={(event) =>
-						setCurrentUser({
-							id: uuidv4(),
-							name: event.target.value,
-							createdAt: new Date().toISOString().slice(0, 10),
-							deck: [],
-						})
-					}
+					placeholder="Código da sala"
+					value={roomId}
+					onChange={(event) => setRoomId(event.target.value)}
 				/>
-				<button type="submit" disabled={!currentUser}>
-					Entrar na sala
-				</button>
+				<button type="submit">Entrar na sala</button>
+				<p>ou</p>
+				<button onClick={handleCreateRoom}>Criar Sala</button>
 			</form>
 		</div>
 	);

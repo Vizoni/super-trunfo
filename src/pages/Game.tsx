@@ -33,12 +33,12 @@ export function Game({ players }: { players: Player[] }) {
 
 	function changeTurn() {
 		switch (room ? room.turn : undefined) {
-			case "Player 1":
-				database.ref(`rooms/${room?.id}`).update({ turn: "Player 2" });
-				break;
-			case "Player 2":
-				database.ref(`rooms/${room?.id}`).update({ turn: "Player 1" });
-				break;
+			// case "Player 1":
+			// 	database.ref(`rooms/${room?.id}`).update({ turn: "Player 2" });
+			// 	break;
+			// case "Player 2":
+			// 	database.ref(`rooms/${room?.id}`).update({ turn: "Player 1" });
+			// 	break;
 			default:
 				break;
 		}

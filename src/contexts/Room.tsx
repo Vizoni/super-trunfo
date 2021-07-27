@@ -5,24 +5,25 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { Player } from "../interfaces/Player";
 import { database, firebase } from "../services/firebase";
 
-type RoomContextType = {
-	room: Room | undefined;
-	setRoom: (data: Room) => void;
-	createRoom: (firstPlayer: Player) => void;
-	addNewPlayer: (secondPlayer: Player) => void;
-};
-
 type RoomContextProviderProps = {
 	children: ReactNode;
 };
 
 type Room = {
-	id: string | null;
+	// id: string | undefined;
 	playersCounter: number;
 	isOpen: boolean;
 	createdAt: string;
-	players: Player[];
+	players: Player[] | undefined;
 	turn: string;
+};
+
+type RoomContextType = {
+	room: Room | undefined;
+	setRoom: (data: Room) => void;
+	createRoom: (room: Room, newPlayer: Player) => Promise<any>;
+	addSecondPlayer: (roomId: string, newPlayer: Player) => void;
+	getRoomById: (id: string) => Promise<any>;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -30,45 +31,49 @@ export const RoomContext = React.createContext({} as RoomContextType);
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	const { currentUser } = useCurrentUser();
 	const [room, setRoom] = useState<Room | undefined>();
+	const [players, setPlayers] = useState<Player[] | undefined>();
 
 	useEffect(() => {
-		updateRoom();
-	}, []);
+		console.log("ROOM - Context:", room);
+	}, [room]);
 
-	async function updateRoom() {
-		database.ref("rooms").on("value", (roomRef) => {
+	async function updateRoom(key: any) {
+		database.ref(`rooms/${key}`).on("value", (roomRef) => {
 			if (roomRef.exists()) {
-				setRoom(roomRef.val()[Object.keys(roomRef.val())[0]]);
+				setRoom(roomRef.val());
 			}
 		});
 	}
 
-	async function createRoom(firstPlayer: Player) {
-		const firebaseRoom = await database.ref(`rooms/`).push({
-			createdAt: new Date().toISOString().slice(0, 10),
-			playersCounter: 1,
-			turn: "Player 1",
+	async function getRoomById(id: string) {
+		let roomResponse = false;
+		await database.ref(`/rooms/${id}`).once("value", (room) => {
+			if (room.exists()) {
+				roomResponse = room.val();
+			}
 		});
-		const playerId = database
-			.ref(`rooms/${firebaseRoom.key}/players`)
-			.set([firstPlayer]);
-		database.ref(`rooms/${firebaseRoom.key}`).update({ id: firebaseRoom.key });
-		updateRoom();
-		return firebaseRoom.key;
+		return roomResponse;
 	}
 
-	async function addNewPlayer(player: Player) {
-		let arrayPlayers = [];
-		arrayPlayers = room ? room.players : [];
-		arrayPlayers.push(player);
+	async function createRoom(room: Room, newPlayer: Player) {
+		const ref = await database.ref(`rooms/`).push(room);
+		await updateRoom(ref.key);
+		database.ref(`rooms/${ref.key}/players`).push(newPlayer);
+		return ref.key;
+	}
+
+	function addSecondPlayer(roomId: any, newPlayer: Player): void {
 		const updates: any = {};
-		updates[`players`] = arrayPlayers;
-		updates[`playersCounter`] = room ? room.playersCounter + 1 : 2;
-		database.ref(`rooms/${room?.id}`).update(updates);
+		updates["playersCounter"] = 2;
+		updates["isOpen"] = false;
+		database.ref(`rooms/${roomId}`).update(updates);
+		database.ref(`rooms/${roomId}/players`).push(newPlayer);
 	}
 
 	return (
-		<RoomContext.Provider value={{ room, setRoom, createRoom, addNewPlayer }}>
+		<RoomContext.Provider
+			value={{ room, setRoom, createRoom, addSecondPlayer, getRoomById }}
+		>
 			{children}
 		</RoomContext.Provider>
 	);

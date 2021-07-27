@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Card } from "../interfaces/Card";
 import { Player } from "../interfaces/Player";
 
@@ -19,6 +19,10 @@ export function CurrentUserContextProvider({
 	children,
 }: CurrentUserContextProviderProps) {
 	const [currentUser, setCurrentUser] = useState<Player | undefined>();
+
+	useEffect(() => {
+		console.log("CURRENTUSER - Context:", currentUser);
+	}, [currentUser]);
 
 	return (
 		<CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
