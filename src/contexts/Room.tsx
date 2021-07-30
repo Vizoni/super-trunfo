@@ -1,4 +1,5 @@
 import React, { ReactNode, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import { useCurrentUser } from "../hooks/useCurrentUser";
@@ -10,7 +11,7 @@ type RoomContextProviderProps = {
 };
 
 type Room = {
-	// id: string | undefined;
+	id: string | undefined | null;
 	playersCounter: number;
 	isOpen: boolean;
 	createdAt: string;
@@ -22,7 +23,8 @@ type RoomContextType = {
 	room: Room | undefined;
 	setRoom: (data: Room) => void;
 	createRoom: (room: Room, newPlayer: Player) => Promise<any>;
-	addSecondPlayer: (roomId: string, newPlayer: Player) => void;
+	updateRoomWithSecondPlayer: (roomId: string) => void;
+	addPlayerToRoom: (roomId: string, newPlayer: Player) => Promise<any>;
 	getRoomById: (id: string) => Promise<any>;
 	updateRoom: (id: string) => void;
 };
@@ -30,6 +32,7 @@ type RoomContextType = {
 export const RoomContext = React.createContext({} as RoomContextType);
 
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
+	let history = useHistory();
 	const { currentUser } = useCurrentUser();
 	const [room, setRoom] = useState<Room | undefined>();
 	const [players, setPlayers] = useState<Player[] | undefined>();
@@ -42,8 +45,17 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		database.ref(`rooms/${key}`).on("value", (roomRef) => {
 			if (roomRef.exists()) {
 				setRoom(roomRef.val());
+			} else {
+				// se sala não existe, redireciona pra home
+				history.push({
+					pathname: `/`,
+				});
 			}
 		});
+	}
+
+	async function getPlayersList() {
+		console.log("Room context - getPlayersList", room);
 	}
 
 	async function getRoomById(id: string) {
@@ -57,18 +69,32 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	}
 
 	async function createRoom(room: Room, newPlayer: Player) {
-		const ref = await database.ref(`rooms/`).push(room);
-		await updateRoom(ref.key);
-		database.ref(`rooms/${ref.key}/players`).push(newPlayer);
-		return ref.key;
+		/* Cria uma sala e atualiza no DB o ID gerado dessa sala
+		Atualiza o context (updateRoom) */
+		const roomId = await database.ref(`rooms/`).push(room).key;
+		await database.ref(`rooms/${roomId}`).update({ id: roomId });
+		await updateRoom(roomId);
+		return roomId;
 	}
 
-	function addSecondPlayer(roomId: any, newPlayer: Player): void {
+	function updateRoomWithSecondPlayer(roomId: any): void {
+		// Atualiza apenas algumas infos da sala
 		const updates: any = {};
 		updates["playersCounter"] = 2;
 		updates["isOpen"] = false;
 		database.ref(`rooms/${roomId}`).update(updates);
-		database.ref(`rooms/${roomId}/players`).push(newPlayer);
+	}
+
+	async function addPlayerToRoom(roomId: any, newPlayer: Player): Promise<any> {
+		/* Cria um novo jogador na sala e atualiza no DB o ID gerado desse player
+		A setagem do ID do currentUser é feito na Home!  */
+		const playerId = await database
+			.ref(`rooms/${roomId}/players`)
+			.push(newPlayer).key;
+		await database
+			.ref(`rooms/${roomId}/players/${playerId}`)
+			.update({ id: playerId });
+		return playerId;
 	}
 
 	return (
@@ -77,7 +103,8 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				room,
 				setRoom,
 				createRoom,
-				addSecondPlayer,
+				updateRoomWithSecondPlayer,
+				addPlayerToRoom,
 				getRoomById,
 				updateRoom,
 			}}

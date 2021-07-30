@@ -15,7 +15,8 @@ export function Home() {
 		room,
 		setRoom,
 		createRoom,
-		addSecondPlayer,
+		updateRoomWithSecondPlayer,
+		addPlayerToRoom,
 		getRoomById,
 		updateRoom,
 	} = useRoom();
@@ -25,10 +26,12 @@ export function Home() {
 		event.preventDefault();
 
 		const newPlayer: Player = {
+			id: "",
 			createdAt: new Date().toISOString().slice(0, 10),
 			deck: [],
 		};
 		const newRoom = {
+			id: "",
 			isOpen: true,
 			createdAt: new Date().toISOString().slice(0, 10),
 			playersCounter: 1,
@@ -36,11 +39,13 @@ export function Home() {
 			turn: "Player 1",
 		};
 
-		const key = await createRoom(newRoom, newPlayer);
+		const roomId = await createRoom(newRoom, newPlayer);
+		const playerId = await addPlayerToRoom(roomId, newPlayer);
+		newPlayer.id = playerId;
 		setCurrentUser(newPlayer);
 		history.push({
-			pathname: `/rooms/${key}`,
-			state: { roomId: key },
+			pathname: `/rooms/${roomId}`,
+			state: { roomId: roomId },
 		});
 	}
 
@@ -48,6 +53,7 @@ export function Home() {
 		event.preventDefault();
 		if (!roomId) return;
 		const newPlayer: Player = {
+			id: "",
 			createdAt: new Date().toISOString().slice(0, 10),
 			deck: [],
 		};
@@ -57,7 +63,9 @@ export function Home() {
 			return;
 		}
 		if (foundRoom) {
-			await addSecondPlayer(roomId, newPlayer);
+			updateRoomWithSecondPlayer(roomId);
+			const playerId = await addPlayerToRoom(roomId, newPlayer);
+			newPlayer.id = playerId;
 			setCurrentUser(newPlayer);
 			updateRoom(roomId);
 			history.push({
@@ -84,4 +92,11 @@ export function Home() {
 			</form>
 		</div>
 	);
+}
+function addPlayerToRoom(roomId: string, newPlayer: Player) {
+	throw new Error("Function not implemented.");
+}
+
+function updateRoomWithSecondPlayer(roomId: string) {
+	throw new Error("Function not implemented.");
 }
