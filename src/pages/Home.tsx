@@ -11,7 +11,14 @@ export function Home() {
 	const history = useHistory();
 
 	const { currentUser, setCurrentUser } = useCurrentUser();
-	const { room, setRoom, createRoom, addSecondPlayer, getRoomById } = useRoom();
+	const {
+		room,
+		setRoom,
+		createRoom,
+		addSecondPlayer,
+		getRoomById,
+		updateRoom,
+	} = useRoom();
 	const [roomId, setRoomId] = useState<string>();
 
 	async function handleCreateRoom(event: FormEvent) {
@@ -45,7 +52,6 @@ export function Home() {
 			deck: [],
 		};
 		const foundRoom = await getRoomById(roomId);
-		console.log("handle login ", foundRoom);
 		if (!foundRoom.isOpen) {
 			alert("Sala cheia");
 			return;
@@ -53,6 +59,7 @@ export function Home() {
 		if (foundRoom) {
 			await addSecondPlayer(roomId, newPlayer);
 			setCurrentUser(newPlayer);
+			updateRoom(roomId);
 			history.push({
 				pathname: `/rooms/${roomId}`,
 				state: { roomId: roomId },

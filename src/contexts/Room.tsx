@@ -24,6 +24,7 @@ type RoomContextType = {
 	createRoom: (room: Room, newPlayer: Player) => Promise<any>;
 	addSecondPlayer: (roomId: string, newPlayer: Player) => void;
 	getRoomById: (id: string) => Promise<any>;
+	updateRoom: (id: string) => void;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -72,7 +73,14 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 
 	return (
 		<RoomContext.Provider
-			value={{ room, setRoom, createRoom, addSecondPlayer, getRoomById }}
+			value={{
+				room,
+				setRoom,
+				createRoom,
+				addSecondPlayer,
+				getRoomById,
+				updateRoom,
+			}}
 		>
 			{children}
 		</RoomContext.Provider>

@@ -15,7 +15,7 @@ export function Game({ players }: { players: Player[] }) {
 	const [player1Deck, setPlayer1Deck] = useState<Card[]>([]);
 	const [player2Deck, setPlayer2Deck] = useState<Card[]>([]);
 	const [turn, setTurn] = useState("Player 1");
-	const { room, setRoom, createRoom, addNewPlayer } = useRoom();
+	const { room, setRoom, createRoom, addSecondPlayer } = useRoom();
 
 	function startGame() {
 		const shuffledCards = shuffle(PACK_OF_CARDS);
