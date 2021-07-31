@@ -27,6 +27,7 @@ type RoomContextType = {
 	addPlayerToRoom: (roomId: string, newPlayer: Player) => Promise<any>;
 	getRoomById: (id: string) => Promise<any>;
 	updateRoom: (id: string) => void;
+	quitPlayer: (roomId: any, playerId: any) => void;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -97,6 +98,14 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		return playerId;
 	}
 
+	function quitPlayer(roomId: any, playerId: any) {
+		database.ref(`rooms/${roomId}/players/${playerId}`).remove();
+		database.ref(`rooms/${roomId}`).update({
+			playersCounter: room ? room.playersCounter - 1 : 1,
+			isOpen: true,
+		});
+	}
+
 	return (
 		<RoomContext.Provider
 			value={{
@@ -107,6 +116,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				addPlayerToRoom,
 				getRoomById,
 				updateRoom,
+				quitPlayer,
 			}}
 		>
 			{children}

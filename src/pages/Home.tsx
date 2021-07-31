@@ -6,11 +6,13 @@ import { database, firebase } from "../services/firebase";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useRoom } from "../hooks/useRoom";
 import { Player } from "../interfaces/Player";
+import { useLeaveUser } from "../hooks/useLeaveUser";
 
 export function Home() {
 	const history = useHistory();
 
 	const { currentUser, setCurrentUser } = useCurrentUser();
+	const { userExit } = useLeaveUser();
 	const {
 		room,
 		setRoom,
@@ -21,6 +23,16 @@ export function Home() {
 		updateRoom,
 	} = useRoom();
 	const [roomId, setRoomId] = useState<string>();
+
+	// useEffect(() => {
+	// 	window.addEventListener("beforeunload", (ev) => {
+	// 		ev.preventDefault();
+	// 		if (ev) {
+	// 			ev.returnValue = alert("OPA");
+	// 		}
+	// 		return "";
+	// 	});
+	// }, []);
 
 	async function handleCreateRoom(event: FormEvent) {
 		event.preventDefault();
@@ -92,11 +104,4 @@ export function Home() {
 			</form>
 		</div>
 	);
-}
-function addPlayerToRoom(roomId: string, newPlayer: Player) {
-	throw new Error("Function not implemented.");
-}
-
-function updateRoomWithSecondPlayer(roomId: string) {
-	throw new Error("Function not implemented.");
 }

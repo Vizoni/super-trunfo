@@ -1,10 +1,11 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { Card } from "../interfaces/Card";
 import { Player } from "../interfaces/Player";
+import { database } from "../services/firebase";
 
 type CurrentUserContextType = {
 	currentUser: Player | undefined;
-	setCurrentUser: (data: Player) => void;
+	setCurrentUser: (data: Player | undefined) => void;
 };
 
 type CurrentUserContextProviderProps = {
