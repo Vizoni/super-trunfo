@@ -2,7 +2,6 @@ import { FormEvent, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-import { database, firebase } from "../services/firebase";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useRoom } from "../hooks/useRoom";
 import { Player } from "../interfaces/Player";

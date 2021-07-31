@@ -15,18 +15,20 @@ type Room = {
 	playersCounter: number;
 	isOpen: boolean;
 	createdAt: string;
-	players: Player[] | undefined;
+	players: any;
 	turn: string;
 };
 
 type RoomContextType = {
 	room: Room | undefined;
+	players: Player[] | undefined;
 	setRoom: (data: Room) => void;
 	createRoom: (room: Room, newPlayer: Player) => Promise<any>;
 	updateRoomWithSecondPlayer: (roomId: string) => void;
 	addPlayerToRoom: (roomId: string, newPlayer: Player) => Promise<any>;
 	getRoomById: (id: string) => Promise<any>;
 	updateRoom: (id: string) => void;
+	updatePlayersList: () => void;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -34,17 +36,27 @@ export const RoomContext = React.createContext({} as RoomContextType);
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	let history = useHistory();
 	const { currentUser } = useCurrentUser();
-	const [room, setRoom] = useState<Room | undefined>();
+	const [room, setRoom] = useState<Room>();
 	const [players, setPlayers] = useState<Player[] | undefined>();
 
 	useEffect(() => {
-		console.log("ROOM - Context:", room);
+		updatePlayersList();
 	}, [room]);
+
+	function updatePlayersList() {
+		if (!room) return;
+		let playerList: Player[] = [];
+		Object.keys(room?.players).forEach((elem) => {
+			playerList.push(room?.players[elem]);
+		});
+		setPlayers(playerList);
+	}
 
 	async function updateRoom(key: any) {
 		database.ref(`rooms/${key}`).on("value", (roomRef) => {
 			if (roomRef.exists()) {
 				setRoom(roomRef.val());
+				updatePlayersList();
 			} else {
 				// se sala não existe, redireciona pra home
 				history.push({
@@ -52,10 +64,6 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				});
 			}
 		});
-	}
-
-	async function getPlayersList() {
-		console.log("Room context - getPlayersList", room);
 	}
 
 	async function getRoomById(id: string) {
@@ -101,12 +109,14 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		<RoomContext.Provider
 			value={{
 				room,
+				players,
 				setRoom,
 				createRoom,
 				updateRoomWithSecondPlayer,
 				addPlayerToRoom,
 				getRoomById,
 				updateRoom,
+				updatePlayersList,
 			}}
 		>
 			{children}
