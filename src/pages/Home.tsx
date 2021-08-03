@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { usePlayers } from "../hooks/usePlayers";
 import { useRoom } from "../hooks/useRoom";
 import { Player } from "../interfaces/Player";
 
@@ -15,10 +16,11 @@ export function Home() {
 		setRoom,
 		createRoom,
 		updateRoomWithSecondPlayer,
-		addPlayerToRoom,
+		// addPlayerToRoom,
 		getRoomById,
 		updateRoom,
 	} = useRoom();
+	const { addPlayerToRoom } = usePlayers();
 	const [roomId, setRoomId] = useState<string>();
 
 	async function handleCreateRoom(event: FormEvent) {
@@ -40,6 +42,7 @@ export function Home() {
 
 		const roomId = await createRoom(newRoom, newPlayer);
 		const playerId = await addPlayerToRoom(roomId, newPlayer);
+		// listenToPlayerUpdate(roomId);
 		newPlayer.id = playerId;
 		setCurrentUser(newPlayer);
 		history.push({
@@ -64,6 +67,7 @@ export function Home() {
 		if (foundRoom) {
 			updateRoomWithSecondPlayer(roomId);
 			const playerId = await addPlayerToRoom(roomId, newPlayer);
+			// listenToPlayerUpdate(roomId);
 			newPlayer.id = playerId;
 			setCurrentUser(newPlayer);
 			updateRoom(roomId);

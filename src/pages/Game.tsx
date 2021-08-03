@@ -7,28 +7,40 @@ import { Player } from "../interfaces/Player";
 import { shuffle } from "../utils/shuffle";
 import { PACK_OF_CARDS } from "../services/packOfCards";
 import { useRoom } from "../hooks/useRoom";
+import { usePlayers } from "../hooks/usePlayers";
 
-export function Game({ players }: { players: Player[] }) {
+export function Game() {
 	const [users, setUsers] = useState<Player[]>([]);
 	const [currentUser, setCurrentUser] = useState("");
 
 	const [player1Deck, setPlayer1Deck] = useState<Card[]>([]);
 	const [player2Deck, setPlayer2Deck] = useState<Card[]>([]);
 	const [turn, setTurn] = useState("Player 1");
-	const { room, setRoom, createRoom } = useRoom();
+	// const { room, players, setRoom, createRoom, updatePlayerDeck } = useRoom();
+	const { room, setRoom, createRoom, updatePlayerDeck } = useRoom();
+	const { players } = usePlayers();
 
 	function startGame() {
+		console.log("GAME - PLAYERS", players);
+		// if (players?.length < 2) {
+		// 	return;
+		// } else {
 		const shuffledCards = shuffle(PACK_OF_CARDS);
 		const halfOfDeckAmount = Math.trunc(shuffledCards.length / 2);
 		// depois de embaralhar, o primeiro player pega a primeira metade do monte
 		// e o segundo player pega o restante do monte -> Devem ter a mesma qtd de cartas!
-		setPlayer1Deck(shuffledCards.slice(0, halfOfDeckAmount));
-		setPlayer1Deck(
-			shuffledCards.slice(
-				halfOfDeckAmount,
-				Math.trunc(shuffledCards.length / 2)
-			)
-		);
+		setupBothPlayersDeck();
+		// }
+		// setPlayer1Deck(shuffledCards.slice(0, halfOfDeckAmount));
+		// setPlayer2Deck(
+		// 	shuffledCards.slice(halfOfDeckAmount, Math.trunc(shuffledCards.length))
+		// );
+	}
+
+	function setupBothPlayersDeck() {
+		players.forEach((player) => {
+			console.log("setup -", player);
+		});
 	}
 
 	function changeTurn() {
@@ -47,7 +59,7 @@ export function Game({ players }: { players: Player[] }) {
 	useEffect(() => {
 		startGame();
 		console.log("comp game -> players", players);
-		setUsers(players);
+		// setUsers(players);
 		// setUsers(playersList)
 	}, []);
 
@@ -57,8 +69,17 @@ export function Game({ players }: { players: Player[] }) {
 
 	return (
 		<>
-			<h1>Aqui vai mostrar os cards</h1>
-			<button onClick={changeTurn}>muda turno</button>
+			{room
+				? room.playersCounter < 2 && (
+						<div>
+							<h4>Aguardando segundo jogador...</h4>
+						</div>
+				  )
+				: ""}
+			<div>
+				<h1>Aqui vai mostrar os cards</h1>
+				<button onClick={changeTurn}>muda turno</button>
+			</div>
 		</>
 	);
 }
