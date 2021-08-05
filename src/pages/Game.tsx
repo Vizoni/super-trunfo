@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactLoading from "react-loading";
 
 import { database, firebase } from "../services/firebase";
 import { useHistory, useLocation } from "react-router-dom";
@@ -8,39 +9,30 @@ import { shuffle } from "../utils/shuffle";
 import { PACK_OF_CARDS } from "../services/packOfCards";
 import { useRoom } from "../hooks/useRoom";
 import { usePlayers } from "../hooks/usePlayers";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useGameDeck } from "../hooks/useGameDeck";
 
 export function Game() {
-	const [users, setUsers] = useState<Player[]>([]);
-	const [currentUser, setCurrentUser] = useState("");
-
-	const [player1Deck, setPlayer1Deck] = useState<Card[]>([]);
-	const [player2Deck, setPlayer2Deck] = useState<Card[]>([]);
-	const [turn, setTurn] = useState("Player 1");
-	// const { room, players, setRoom, createRoom, updatePlayerDeck } = useRoom();
+	const { currentUser, setCurrentUser, addCardsToDeck } = useCurrentUser();
 	const { room, setRoom, createRoom, updatePlayerDeck } = useRoom();
-	const { players } = usePlayers();
+	const { players, setPlayersDeck } = usePlayers();
+	const { deck, playerBuyCard } = useGameDeck();
 
 	function startGame() {
-		console.log("GAME - PLAYERS", players);
-		// if (players?.length < 2) {
-		// 	return;
-		// } else {
-		const shuffledCards = shuffle(PACK_OF_CARDS);
-		const halfOfDeckAmount = Math.trunc(shuffledCards.length / 2);
+		if (players?.length === 2) {
+			console.log("podemos começar");
+			console.log("game -> currentuser", currentUser);
+			// setPlayersDeck(room?.id, shuffledCards, halfOfDeckAmount);
+		} else {
+			console.log("nao tem total de players ainda");
+		}
 		// depois de embaralhar, o primeiro player pega a primeira metade do monte
 		// e o segundo player pega o restante do monte -> Devem ter a mesma qtd de cartas!
-		setupBothPlayersDeck();
 		// }
 		// setPlayer1Deck(shuffledCards.slice(0, halfOfDeckAmount));
 		// setPlayer2Deck(
 		// 	shuffledCards.slice(halfOfDeckAmount, Math.trunc(shuffledCards.length))
 		// );
-	}
-
-	function setupBothPlayersDeck() {
-		players.forEach((player) => {
-			console.log("setup -", player);
-		});
 	}
 
 	function changeTurn() {
@@ -58,10 +50,7 @@ export function Game() {
 
 	useEffect(() => {
 		startGame();
-		console.log("comp game -> players", players);
-		// setUsers(players);
-		// setUsers(playersList)
-	}, []);
+	}, [players]);
 
 	// pra mostrar os cards tem q fazer um condicional falando: se for o player 1 -> os cards sao o do deck 1
 	// se for player 2, os cards sao do deck 2;

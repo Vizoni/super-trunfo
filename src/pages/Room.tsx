@@ -6,17 +6,25 @@ import { Player } from "../interfaces/Player";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useRoom } from "../hooks/useRoom";
 import { usePlayers } from "../hooks/usePlayers";
+import { useGameDeck } from "../hooks/useGameDeck";
 
 export function Room() {
 	const history = useHistory() as any;
-	const { currentUser, setCurrentUser } = useCurrentUser();
+	const { currentUser, setCurrentUser, addCardsToDeck } = useCurrentUser();
 	const { room } = useRoom();
 	const { players, listenToPlayerUpdate } = usePlayers();
+	const { deck, generateNewGameDeck, playerBuyCard } = useGameDeck();
 
 	useEffect(() => {
 		// atualiza o context Players com os players da sala
 		listenToPlayerUpdate(room?.id);
 	}, [room]);
+
+	useEffect(() => {
+		console.log("usuario entrou na sala...", currentUser?.id);
+		const boughtCards = playerBuyCard(2);
+		addCardsToDeck(room?.id, boughtCards);
+	}, []);
 
 	return (
 		<>
