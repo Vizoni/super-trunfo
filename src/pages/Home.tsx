@@ -11,7 +11,7 @@ export function Home() {
 
 	async function handleCreateRoom(event: FormEvent) {
 		event.preventDefault();
-		await createNewRoom();
+		const roomId = await createNewRoom();
 		history.push({
 			pathname: `/rooms/${roomId}`,
 			state: { roomId: roomId },

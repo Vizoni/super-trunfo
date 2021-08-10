@@ -38,9 +38,9 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	// const { players, setPlayers } = usePlayers();
 
 	async function updateRoom(key: any) {
-		database.ref(`rooms/${key}`).on("value", (roomRef) => {
+		await database.ref(`rooms/${key}`).on("value", (roomRef) => {
 			if (roomRef.exists()) {
-				console.log("UPDATE ROOM ATUALIZANDO...");
+				console.log("UPDATE ROOM ATUALIZANDO...", roomRef.val());
 				setRoom(roomRef.val());
 			} else {
 				// se sala não existe, redireciona pra home
@@ -71,10 +71,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	}
 
 	function updateRoomWithSecondPlayer(roomId: any): void {
-		// Atualiza apenas algumas infos da sala
-		const updates: any = {};
-		updates["playersCounter"] = 2;
-		database.ref(`rooms/${roomId}`).update(updates);
+		database.ref(`rooms/${roomId}`).update({ playersCounter: 2 });
 	}
 
 	function updatePlayerDeck(playerId: string, cards: Card[]): void {

@@ -26,9 +26,9 @@ export function PlayersContextProvider({
 }: PlayersContextProviderProps) {
 	const [players, setPlayers] = useState<Player[]>([]);
 
-	function listenToPlayerUpdate(key: any) {
+	function listenToPlayerUpdate(roomId: any) {
 		let playerList: Player[] = [];
-		database.ref(`rooms/${key}/players`).on("value", (players) => {
+		database.ref(`rooms/${roomId}/players`).on("value", (players) => {
 			if (players.val()) {
 				let arrayOfPlayers = Object.keys(players.val());
 				arrayOfPlayers.forEach((player, index) => {
@@ -49,6 +49,7 @@ export function PlayersContextProvider({
 		await database
 			.ref(`rooms/${roomId}/players/${playerId}`)
 			.update({ id: playerId });
+		listenToPlayerUpdate(roomId);
 		return playerId;
 	}
 

@@ -1,35 +1,53 @@
 import React, { useEffect, useState } from "react";
-import { database, firebase } from "../services/firebase";
-import { useHistory, useLocation } from "react-router-dom";
-import { Game } from "./Game";
-import { Player } from "../interfaces/Player";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useRoom } from "../hooks/useRoom";
-import { usePlayers } from "../hooks/usePlayers";
-import { useGameDeck } from "../hooks/useGameDeck";
+import { useGame } from "../hooks/useGame";
 
 export function Room() {
-	const history = useHistory() as any;
-	const { currentUser, setCurrentUser, addCardsToDeck } = useCurrentUser();
-	const { room } = useRoom();
-	const { players, listenToPlayerUpdate } = usePlayers();
-	const { deck, generateNewGameDeck, playerBuyCard } = useGameDeck();
+	const {
+		players,
+		room,
+		deck,
+		currentUser,
+		buyCards,
+		listenToPlayerJoiningRoom,
+		listenToDeckUpdate,
+	} = useGame();
 
 	useEffect(() => {
-		// atualiza o context Players com os players da sala
-		listenToPlayerUpdate(room?.id);
-	}, [room]);
-
-	useEffect(() => {
-		console.log("usuario entrou na sala...", currentUser?.id);
-		const boughtCards = playerBuyCard(2);
-		addCardsToDeck(room?.id, boughtCards);
+		console.log("--------- ENTROU NA SALA ---------");
+		listenToPlayerJoiningRoom();
+		listenToDeckUpdate();
+		console.log("currentUser", currentUser.currentUser);
+		console.log("DECK", deck);
+		console.log("Players", players);
+		console.log("Room", room);
+		setTimeout(() => {
+			buyCards(2);
+		}, 5000);
+		// const boughtCards = playerBuyCard(2);
+		// addCardsToDeck(room?.id, boughtCards);
 	}, []);
+
+	function printStatus() {
+		console.log("--------- ATUALIZANDO INFOS ---------");
+		console.log("currentUser", currentUser.currentUser);
+		console.log("DECK", deck);
+		console.log("Players", players);
+		console.log("Room", room);
+		console.log("--------- ================ ---------");
+	}
 
 	return (
 		<>
+			<button onClick={printStatus}>Printar info</button>
+			<button
+				onClick={() => {
+					buyCards(2);
+				}}
+			>
+				Comprar cards
+			</button>
 			<h1>Usuários logados:</h1>
-			{players && (
+			{/* {players && (
 				<div>
 					<div>
 						{players.map((player: Player) => {
@@ -38,7 +56,7 @@ export function Room() {
 					</div>
 					<Game></Game>
 				</div>
-			)}
+			)} */}
 		</>
 	);
 }

@@ -28,8 +28,12 @@ export function CurrentUserContextProvider({
 	}, [currentUser]);
 
 	async function addCardsToDeck(roomId: string | undefined, newCards: Card[]) {
-		console.log("currentuser context - addCardsToDeck");
-		console.log("currentuser context - new cards", newCards);
+		console.log(
+			"currentuser context - new cards",
+			roomId,
+			newCards,
+			currentUser
+		);
 		await database
 			.ref(`rooms/${roomId}/players/${currentUser?.id}`)
 			.update({ deck: newCards });
