@@ -15,7 +15,6 @@ type RoomContextProviderProps = {
 type Room = {
 	id: string;
 	playersCounter: number;
-	isOpen: boolean;
 	createdAt: string;
 	players: any;
 	turn: string;
@@ -75,7 +74,6 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		// Atualiza apenas algumas infos da sala
 		const updates: any = {};
 		updates["playersCounter"] = 2;
-		updates["isOpen"] = false;
 		database.ref(`rooms/${roomId}`).update(updates);
 	}
 
