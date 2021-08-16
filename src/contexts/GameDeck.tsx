@@ -34,8 +34,9 @@ export function GameDeckContextProvider({
 		return cardsShuffled;
 	}
 
-	function listenToDeckUpdate(roomId: any) {
-		database.ref(`rooms/${roomId}/deck`).on("value", (deck) => {
+	async function listenToDeckUpdate(roomId: any) {
+		console.log("GameDeck -> listenToDeckUpdate", roomId);
+		await database.ref(`rooms/${roomId}/deck`).on("value", (deck) => {
 			if (deck.exists()) {
 				console.log("UPDATE DECK ATUALIZANDO...");
 				console.log("DEKC DO BANCO", roomId, deck.val());

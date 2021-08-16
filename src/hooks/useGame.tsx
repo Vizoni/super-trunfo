@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUser";
 import { GameDeckContext } from "../contexts/GameDeck";
 import { PlayersContext } from "../contexts/Players";
@@ -10,6 +10,16 @@ export function useGame() {
 	const players = useContext(PlayersContext);
 	const room = useContext(RoomContext);
 	const deck = useContext(GameDeckContext);
+
+	// main function to start listening the contexts and make them get updated regularly
+	// method has to be called just two times: Or when you create a room or when someone joins it.
+	async function startListenToAllContexts(roomId: string) {
+		console.log("starting listening to all context", roomId);
+		if (!roomId) return;
+		await room.updateRoom(roomId);
+		await players.listenToPlayerUpdate(roomId);
+		await deck.listenToDeckUpdate(roomId);
+	}
 
 	async function createNewRoom() {
 		const newPlayer: Player = {
@@ -26,6 +36,7 @@ export function useGame() {
 			deck: deck.generateNewGameDeck(),
 		};
 		const roomId = await room.createRoom(newRoom, newPlayer);
+		await startListenToAllContexts(roomId);
 		const playerId = await players.addPlayerToRoom(roomId, newPlayer);
 		newPlayer.id = playerId;
 		currentUser.setCurrentUser(newPlayer);
@@ -37,32 +48,27 @@ export function useGame() {
 	}
 
 	async function joinRoom(roomId: string) {
+		startListenToAllContexts(roomId);
 		const newPlayer: Player = {
 			id: "",
 			createdAt: new Date().toISOString().slice(0, 10),
 			deck: [],
 		};
-		await room.updateRoomWithSecondPlayer(roomId);
 		const playerId = await players.addPlayerToRoom(roomId, newPlayer);
 		newPlayer.id = playerId;
 		currentUser.setCurrentUser(newPlayer);
-		await room.updateRoom(roomId);
-		console.log("agora pode dar join", room);
+		room.updateRoomWithSecondPlayer(roomId);
 	}
 
 	async function buyCards(amountOfCards: number) {
-		console.log("use game - bu ycards", room.room?.id, amountOfCards);
+		console.log(
+			"use game - buy cards",
+			deck.deck,
+			room.room?.id,
+			amountOfCards
+		);
 		const newCards = deck.playerDrawCards(room.room?.id, amountOfCards);
 		currentUser.addCardsToDeck(room.room?.id, newCards);
-		// console.log("use game - buy cards", newCards)
-	}
-
-	function listenToPlayerJoiningRoom() {
-		players.listenToPlayerUpdate(room.room?.id);
-	}
-
-	function listenToDeckUpdate() {
-		deck.listenToDeckUpdate(room.room?.id);
 	}
 
 	return {
@@ -74,7 +80,6 @@ export function useGame() {
 		findRoom,
 		joinRoom,
 		buyCards,
-		listenToPlayerJoiningRoom,
-		listenToDeckUpdate,
+		startListenToAllContexts,
 	};
 }

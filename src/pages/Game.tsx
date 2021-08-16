@@ -16,7 +16,7 @@ export function Game() {
 	const { currentUser, setCurrentUser, addCardsToDeck } = useCurrentUser();
 	const { room, setRoom, createRoom, updatePlayerDeck } = useRoom();
 	const { players, setPlayersDeck } = usePlayers();
-	const { deck, playerBuyCard } = useGameDeck();
+	const { deck, playerDrawCards } = useGameDeck();
 
 	function startGame() {
 		if (players?.length === 2) {

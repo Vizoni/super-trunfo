@@ -35,10 +35,15 @@ export const RoomContext = React.createContext({} as RoomContextType);
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	let history = useHistory();
 	const [room, setRoom] = useState<Room>();
-	// const { players, setPlayers } = usePlayers();
+
+	// useEffect(() => {
+	// 	console.log("room context ", room);
+	// }, [room]);
 
 	async function updateRoom(key: any) {
+		console.log("vizoni1", key);
 		await database.ref(`rooms/${key}`).on("value", (roomRef) => {
+			console.log("vizoni22", roomRef.val());
 			if (roomRef.exists()) {
 				console.log("UPDATE ROOM ATUALIZANDO...", roomRef.val());
 				setRoom(roomRef.val());
@@ -66,7 +71,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		Atualiza o context (updateRoom) */
 		const roomId = await database.ref(`rooms/`).push(room).key;
 		await database.ref(`rooms/${roomId}`).update({ id: roomId });
-		await updateRoom(roomId);
+		// await updateRoom(roomId);
 		return roomId;
 	}
 

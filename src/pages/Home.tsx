@@ -28,6 +28,7 @@ export function Home() {
 		}
 		if (foundRoom) {
 			await joinRoom(roomId);
+			// return;
 			history.push({
 				pathname: `/rooms/${roomId}`,
 				state: { roomId: roomId },
