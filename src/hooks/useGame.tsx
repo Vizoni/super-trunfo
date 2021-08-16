@@ -14,7 +14,6 @@ export function useGame() {
 	// main function to start listening the contexts and make them get updated regularly
 	// method has to be called just two times: Or when you create a room or when someone joins it.
 	async function startListenToAllContexts(roomId: string) {
-		console.log("starting listening to all context", roomId);
 		if (!roomId) return;
 		await room.updateRoom(roomId);
 		await players.listenToPlayerUpdate(roomId);
@@ -35,7 +34,7 @@ export function useGame() {
 			turn: "Player 1",
 			deck: deck.generateNewGameDeck(),
 		};
-		const roomId = await room.createRoom(newRoom, newPlayer);
+		const roomId = await room.createRoom(newRoom);
 		await startListenToAllContexts(roomId);
 		const playerId = await players.addPlayerToRoom(roomId, newPlayer);
 		newPlayer.id = playerId;
@@ -61,12 +60,6 @@ export function useGame() {
 	}
 
 	async function buyCards(amountOfCards: number) {
-		console.log(
-			"use game - buy cards",
-			deck.deck,
-			room.room?.id,
-			amountOfCards
-		);
 		const newCards = deck.playerDrawCards(room.room?.id, amountOfCards);
 		currentUser.addCardsToDeck(room.room?.id, newCards);
 	}

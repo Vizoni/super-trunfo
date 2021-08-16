@@ -29,18 +29,13 @@ export function GameDeckContextProvider({
 
 	function generateNewGameDeck() {
 		const cardsShuffled = shuffle(PACK_OF_CARDS);
-		console.log("setando deck do generateNewGameDeck");
 		setDeck(cardsShuffled);
 		return cardsShuffled;
 	}
 
 	async function listenToDeckUpdate(roomId: any) {
-		console.log("GameDeck -> listenToDeckUpdate", roomId);
 		await database.ref(`rooms/${roomId}/deck`).on("value", (deck) => {
 			if (deck.exists()) {
-				console.log("UPDATE DECK ATUALIZANDO...");
-				console.log("DEKC DO BANCO", roomId, deck.val());
-				console.log("setando deck do listenToDeckUpdate");
 				setDeck(deck.val());
 			}
 		});
@@ -52,30 +47,14 @@ export function GameDeckContextProvider({
 
 	function playerDrawCards(roomId: any, amountOfCards: number): Card[] {
 		if (deck.length <= 0) {
-			console.log("Não tem nada de carta pra comprar mano");
+			console.log("Não existem cartas para serem compradas");
 			return [];
 		}
 
 		let cardsToReceive: Card[] = [];
 		cardsToReceive = deck.splice(0, amountOfCards);
-		// setDeck(deck.splice(0, amountOfCards));
-		// setDeck(deck);
 		updateGameDeckFromDatabase(roomId, deck);
-		console.log("cardsToReceive", cardsToReceive);
 		return cardsToReceive;
-		// console.log("UAX", auxDeck);
-		// console.log("deck", deck);
-		// const cardsPlayerWillReceive = [];
-		// console.log("DECK ANTES DE COMEÇAR", deck);
-		// for (let index = 0; index < amountOfCards; index++) {
-		// 	const card = deck[index];
-		// 	cardsPlayerWillReceive.push(card);
-		// 	// ja retira o card comprado da array cópia e atualiza os cards do deck
-		// 	auxDeck.splice(index, 1);
-		// 	setDeck(auxDeck);
-		// }
-		// console.log("CARDS RECEBIDOS", cardsPlayerWillReceive);
-		// return cardsPlayerWillReceive as Card[];
 	}
 
 	return (

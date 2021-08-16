@@ -21,23 +21,25 @@ export function CurrentUserContextProvider({
 	children,
 }: CurrentUserContextProviderProps) {
 	const [currentUser, setCurrentUser] = useState<Player | undefined>();
-	// const [currentUserDeck, setCurrentUserDeck] = useState<Card[]>([]);
 
 	useEffect(() => {
 		console.log("CURRENTUSER - Context:", currentUser);
 	}, [currentUser]);
 
+	// check if there is already any card on current users deck
+	// if already has cards then add the new Cards at the last position
+	// if doesn't has cards yet, it add the draw cards to it first position
 	async function addCardsToDeck(roomId: string | undefined, newCards: Card[]) {
-		console.log(
-			"currentuser context - new cards",
-			roomId,
-			newCards,
-			currentUser
-		);
 		await database
-			.ref(`rooms/${roomId}/players/${currentUser?.id}`)
-			.update({ deck: newCards });
-		// setCurrentUser(...currentUser?.deck, { deck: newCards });
+			.ref(`rooms/${roomId}/players/${currentUser?.id}/deck`)
+			.once("value", (currentDeck) => {
+				if (currentDeck.exists()) {
+					newCards = [...currentDeck.val(), ...newCards];
+				}
+				database
+					.ref(`rooms/${roomId}/players/${currentUser?.id}`)
+					.update({ deck: newCards });
+			});
 	}
 
 	return (

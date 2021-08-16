@@ -22,17 +22,9 @@ export function Game() {
 		if (players?.length === 2) {
 			console.log("podemos começar");
 			console.log("game -> currentuser", currentUser);
-			// setPlayersDeck(room?.id, shuffledCards, halfOfDeckAmount);
 		} else {
 			console.log("nao tem total de players ainda");
 		}
-		// depois de embaralhar, o primeiro player pega a primeira metade do monte
-		// e o segundo player pega o restante do monte -> Devem ter a mesma qtd de cartas!
-		// }
-		// setPlayer1Deck(shuffledCards.slice(0, halfOfDeckAmount));
-		// setPlayer2Deck(
-		// 	shuffledCards.slice(halfOfDeckAmount, Math.trunc(shuffledCards.length))
-		// );
 	}
 
 	function changeTurn() {
