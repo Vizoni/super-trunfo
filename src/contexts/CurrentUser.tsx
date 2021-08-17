@@ -4,7 +4,7 @@ import { Player } from "../interfaces/Player";
 import { database } from "../services/firebase";
 
 type CurrentUserContextType = {
-	currentUser: Player | undefined;
+	currentUser: Player;
 	currentUserDeck: Card[];
 	setCurrentUserDeck: (data: Card[]) => void;
 	setCurrentUser: (data: Player) => void;
@@ -23,7 +23,11 @@ export const CurrentUserContext = React.createContext(
 export function CurrentUserContextProvider({
 	children,
 }: CurrentUserContextProviderProps) {
-	const [currentUser, setCurrentUser] = useState<Player | undefined>();
+	const [currentUser, setCurrentUser] = useState<Player>({
+		id: "",
+		createdAt: "",
+		deck: [],
+	});
 	const [currentUserDeck, setCurrentUserDeck] = useState<Card[]>([]);
 
 	useEffect(() => {
@@ -35,13 +39,13 @@ export function CurrentUserContextProvider({
 	// if doesn't has cards yet, it add the draw cards to it first position
 	async function addCardsToDeck(roomId: string, newCards: Card[]) {
 		await database
-			.ref(`rooms/${roomId}/players/${currentUser?.id}/deck`)
+			.ref(`rooms/${roomId}/players/${currentUser.id}/deck`)
 			.once("value", (currentDeck) => {
 				if (currentDeck.exists()) {
 					newCards = [...currentDeck.val(), ...newCards];
 				}
 				database
-					.ref(`rooms/${roomId}/players/${currentUser?.id}`)
+					.ref(`rooms/${roomId}/players/${currentUser.id}`)
 					.update({ deck: newCards });
 			});
 		setCurrentUserDeck(newCards);

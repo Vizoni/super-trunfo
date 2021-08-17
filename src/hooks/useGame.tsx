@@ -64,7 +64,6 @@ export function useGame() {
 	}
 
 	async function buyCards(amountOfCards: number) {
-		console.log("BUY CARDS", room.room, currentUser);
 		const newCards = deck.playerDrawCards(room.room, amountOfCards);
 		currentUser.addCardsToDeck(room.room.id, newCards);
 	}
