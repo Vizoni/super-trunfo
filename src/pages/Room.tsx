@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useGame } from "../hooks/useGame";
+import { Game } from "./Game";
 
 export function Room() {
 	const { players, room, deck, currentUser, buyCards } = useGame();
@@ -36,9 +37,9 @@ export function Room() {
 							return <h3>{player.id}</h3>;
 						})}
 					</div>
-					<Game></Game>
-				</div>
-			)} */}
+					</div>
+				)} */}
+			<Game></Game>
 		</>
 	);
 }

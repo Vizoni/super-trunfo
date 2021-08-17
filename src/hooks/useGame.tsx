@@ -13,11 +13,12 @@ export function useGame() {
 
 	// main function to start listening the contexts and make them get updated regularly
 	// method has to be called just two times: Or when you create a room or when someone joins it.
-	async function startListenToAllContexts(roomId: string) {
+	async function startListenToAllContexts(roomId: string, playerId: string) {
 		if (!roomId) return;
 		await room.updateRoom(roomId);
 		await players.listenToPlayerUpdate(roomId);
 		await deck.listenToDeckUpdate(roomId);
+		await currentUser.listenToCurrentUserUpdate(roomId, playerId);
 	}
 
 	async function createNewRoom() {
@@ -35,10 +36,12 @@ export function useGame() {
 			deck: deck.generateNewGameDeck(),
 		};
 		const roomId = await room.createRoom(newRoom);
-		await startListenToAllContexts(roomId);
+		newRoom.id = roomId;
 		const playerId = await players.addPlayerToRoom(roomId, newPlayer);
 		newPlayer.id = playerId;
-		currentUser.setCurrentUser(newPlayer);
+		await currentUser.setCurrentUser(newPlayer);
+		await room.setRoom(newRoom);
+		await startListenToAllContexts(roomId, playerId);
 		return roomId;
 	}
 
@@ -46,22 +49,24 @@ export function useGame() {
 		return await room.getRoomById(roomId);
 	}
 
-	async function joinRoom(roomId: string) {
-		startListenToAllContexts(roomId);
+	async function joinRoom(foundRoom: any) {
 		const newPlayer: Player = {
 			id: "",
 			createdAt: new Date().toISOString().slice(0, 10),
 			deck: [],
 		};
-		const playerId = await players.addPlayerToRoom(roomId, newPlayer);
+		await room.setRoom(foundRoom);
+		const playerId = await players.addPlayerToRoom(foundRoom.id, newPlayer);
 		newPlayer.id = playerId;
-		currentUser.setCurrentUser(newPlayer);
-		room.updateRoomWithSecondPlayer(roomId);
+		await currentUser.setCurrentUser(newPlayer);
+		await room.updateRoomWithSecondPlayer(foundRoom.id);
+		await startListenToAllContexts(foundRoom.id, playerId);
 	}
 
 	async function buyCards(amountOfCards: number) {
+		console.log("BUY CARDS", amountOfCards, room.room, currentUser);
 		const newCards = deck.playerDrawCards(room.room?.id, amountOfCards);
-		currentUser.addCardsToDeck(room.room?.id, newCards);
+		currentUser.addCardsToDeck(room.room.id, newCards);
 	}
 
 	return {

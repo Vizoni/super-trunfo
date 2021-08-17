@@ -1,12 +1,9 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import { usePlayers } from "../hooks/usePlayers";
 import { Card } from "../interfaces/Card";
 import { Player } from "../interfaces/Player";
-import { database, firebase } from "../services/firebase";
+import { database } from "../services/firebase";
 
 type RoomContextProviderProps = {
 	children: ReactNode;
@@ -16,12 +13,13 @@ type Room = {
 	id: string;
 	playersCounter: number;
 	createdAt: string;
-	players: any;
+	players: Player[];
 	turn: string;
+	deck: Card[];
 };
 
 type RoomContextType = {
-	room: Room | undefined;
+	room: Room;
 	setRoom: (data: Room) => void;
 	createRoom: (room: Room) => Promise<any>;
 	updateRoomWithSecondPlayer: (roomId: string) => void;
@@ -34,7 +32,14 @@ export const RoomContext = React.createContext({} as RoomContextType);
 
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	let history = useHistory();
-	const [room, setRoom] = useState<Room>();
+	const [room, setRoom] = useState<Room>({
+		id: "",
+		playersCounter: 0,
+		createdAt: "",
+		players: [],
+		turn: "",
+		deck: [],
+	});
 
 	async function updateRoom(key: any) {
 		await database.ref(`rooms/${key}`).on("value", (roomRef) => {

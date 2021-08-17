@@ -1,25 +1,13 @@
 import React, { useEffect, useState } from "react";
-import ReactLoading from "react-loading";
 
-import { database, firebase } from "../services/firebase";
-import { useHistory, useLocation } from "react-router-dom";
-import { Card } from "../interfaces/Card";
-import { Player } from "../interfaces/Player";
-import { shuffle } from "../utils/shuffle";
-import { PACK_OF_CARDS } from "../services/packOfCards";
-import { useRoom } from "../hooks/useRoom";
-import { usePlayers } from "../hooks/usePlayers";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useGameDeck } from "../hooks/useGameDeck";
+import { CardComponent } from "../components/CardComponent";
+import { useGame } from "../hooks/useGame";
 
 export function Game() {
-	const { currentUser, setCurrentUser, addCardsToDeck } = useCurrentUser();
-	const { room, setRoom, createRoom, updatePlayerDeck } = useRoom();
-	const { players, setPlayersDeck } = usePlayers();
-	const { deck, playerDrawCards } = useGameDeck();
+	const { currentUser, room, players, deck } = useGame();
 
 	function startGame() {
-		if (players?.length === 2) {
+		if (players.players.length === 2) {
 			console.log("podemos começar");
 			console.log("game -> currentuser", currentUser);
 		} else {
@@ -28,7 +16,7 @@ export function Game() {
 	}
 
 	function changeTurn() {
-		switch (room ? room.turn : undefined) {
+		switch (room.room && room.room.turn) {
 			// case "Player 1":
 			// 	database.ref(`rooms/${room?.id}`).update({ turn: "Player 2" });
 			// 	break;
@@ -50,16 +38,15 @@ export function Game() {
 
 	return (
 		<>
-			{room
-				? room.playersCounter < 2 && (
-						<div>
-							<h4>Aguardando segundo jogador...</h4>
-						</div>
-				  )
-				: ""}
+			{room.room && room.room?.playersCounter < 2 && (
+				<div>
+					<h4>Aguardando segundo jogador...</h4>
+				</div>
+			)}
 			<div>
 				<h1>Aqui vai mostrar os cards</h1>
 				<button onClick={changeTurn}>muda turno</button>
+				<div></div>
 			</div>
 		</>
 	);

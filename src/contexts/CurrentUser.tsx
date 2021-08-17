@@ -5,8 +5,11 @@ import { database } from "../services/firebase";
 
 type CurrentUserContextType = {
 	currentUser: Player | undefined;
+	currentUserDeck: Card[];
+	setCurrentUserDeck: (data: Card[]) => void;
 	setCurrentUser: (data: Player) => void;
-	addCardsToDeck: (roomId: string | undefined, newCards: Card[]) => void;
+	addCardsToDeck: (roomId: string, newCards: Card[]) => void;
+	listenToCurrentUserUpdate: (roomId: string, playerId: string) => void;
 };
 
 type CurrentUserContextProviderProps = {
@@ -21,6 +24,7 @@ export function CurrentUserContextProvider({
 	children,
 }: CurrentUserContextProviderProps) {
 	const [currentUser, setCurrentUser] = useState<Player | undefined>();
+	const [currentUserDeck, setCurrentUserDeck] = useState<Card[]>([]);
 
 	useEffect(() => {
 		console.log("CURRENTUSER - Context:", currentUser);
@@ -29,7 +33,7 @@ export function CurrentUserContextProvider({
 	// check if there is already any card on current users deck
 	// if already has cards then add the new Cards at the last position
 	// if doesn't has cards yet, it add the draw cards to it first position
-	async function addCardsToDeck(roomId: string | undefined, newCards: Card[]) {
+	async function addCardsToDeck(roomId: string, newCards: Card[]) {
 		await database
 			.ref(`rooms/${roomId}/players/${currentUser?.id}/deck`)
 			.once("value", (currentDeck) => {
@@ -42,9 +46,26 @@ export function CurrentUserContextProvider({
 			});
 	}
 
+	async function listenToCurrentUserUpdate(roomId: string, playerId: string) {
+		await database
+			.ref(`rooms/${roomId}/players/${playerId}`)
+			.on("value", (user) => {
+				if (user.exists()) {
+					setCurrentUser(user.val());
+				}
+			});
+	}
+
 	return (
 		<CurrentUserContext.Provider
-			value={{ currentUser, setCurrentUser, addCardsToDeck }}
+			value={{
+				currentUser,
+				setCurrentUser,
+				currentUserDeck,
+				setCurrentUserDeck,
+				addCardsToDeck,
+				listenToCurrentUserUpdate,
+			}}
 		>
 			{children}
 		</CurrentUserContext.Provider>

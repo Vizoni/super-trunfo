@@ -7,7 +7,7 @@ import { shuffle } from "../utils/shuffle";
 type GameDeckContextType = {
 	deck: Card[];
 	setDeck: (data: Card[]) => void;
-	generateNewGameDeck: () => void;
+	generateNewGameDeck: () => Card[];
 	playerDrawCards: (roomId: any, amountOfCards: number) => Card[];
 	listenToDeckUpdate: (roomId: any) => void;
 };
