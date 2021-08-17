@@ -9,7 +9,6 @@ export function Game() {
 	function startGame() {
 		if (players.players.length === 2) {
 			console.log("podemos começar");
-			console.log("game -> currentuser", currentUser);
 		} else {
 			console.log("nao tem total de players ainda");
 		}
@@ -38,15 +37,17 @@ export function Game() {
 
 	return (
 		<>
-			{room.room && room.room?.playersCounter < 2 && (
+			{room.room && room.room.playersCounter < 2 && (
 				<div>
 					<h4>Aguardando segundo jogador...</h4>
 				</div>
 			)}
 			<div>
 				<h1>Aqui vai mostrar os cards</h1>
-				<button onClick={changeTurn}>muda turno</button>
-				<div></div>
+				{/* <button onClick={changeTurn}>muda turno</button> */}
+				<CardComponent
+					currentCard={currentUser.currentUserDeck[0]}
+				></CardComponent>
 			</div>
 		</>
 	);

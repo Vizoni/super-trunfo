@@ -45,16 +45,26 @@ export function GameDeckContextProvider({
 		database.ref(`rooms/${roomId}/deck`).set(cards);
 	}
 
-	function playerDrawCards(roomId: any, amountOfCards: number): Card[] {
-		if (deck.length <= 0) {
-			console.log("Não existem cartas para serem compradas");
-			return [];
+	function playerDrawCards(room: any, amountOfCards: number): Card[] {
+		let finalDeck = deck;
+		// verifica se o contexto do Deck já está populado, se não estiver, vê se o contexto do room já está
+		if (deck && deck.length <= 0) {
+			if (room.deck && room.deck.length <= 0) {
+				console.log("Não existem cartas para comprar");
+				return [];
+			} else {
+				finalDeck = room.deck;
+			}
 		}
-
-		let cardsToReceive: Card[] = [];
-		cardsToReceive = deck.splice(0, amountOfCards);
-		updateGameDeckFromDatabase(roomId, deck);
-		return cardsToReceive;
+		if (finalDeck) {
+			let cardsToReceive: Card[] = [];
+			cardsToReceive = finalDeck.splice(0, amountOfCards);
+			//atualiza o deck do game com o novo deck depois de ter tirado as primeiras X cartas
+			updateGameDeckFromDatabase(room.id, finalDeck);
+			return cardsToReceive;
+		}
+		console.log("Não existem cartas para comprar");
+		return [];
 	}
 
 	return (

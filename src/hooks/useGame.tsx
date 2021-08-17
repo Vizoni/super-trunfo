@@ -16,8 +16,8 @@ export function useGame() {
 	async function startListenToAllContexts(roomId: string, playerId: string) {
 		if (!roomId) return;
 		await room.updateRoom(roomId);
-		await players.listenToPlayerUpdate(roomId);
 		await deck.listenToDeckUpdate(roomId);
+		await players.listenToPlayerUpdate(roomId);
 		await currentUser.listenToCurrentUserUpdate(roomId, playerId);
 	}
 
@@ -64,8 +64,8 @@ export function useGame() {
 	}
 
 	async function buyCards(amountOfCards: number) {
-		console.log("BUY CARDS", amountOfCards, room.room, currentUser);
-		const newCards = deck.playerDrawCards(room.room?.id, amountOfCards);
+		console.log("BUY CARDS", room.room, currentUser);
+		const newCards = deck.playerDrawCards(room.room, amountOfCards);
 		currentUser.addCardsToDeck(room.room.id, newCards);
 	}
 

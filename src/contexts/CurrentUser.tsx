@@ -44,6 +44,7 @@ export function CurrentUserContextProvider({
 					.ref(`rooms/${roomId}/players/${currentUser?.id}`)
 					.update({ deck: newCards });
 			});
+		setCurrentUserDeck(newCards);
 	}
 
 	async function listenToCurrentUserUpdate(roomId: string, playerId: string) {

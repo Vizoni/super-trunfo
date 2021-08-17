@@ -22,12 +22,13 @@ export function Home() {
 		event.preventDefault();
 		if (!roomId) return;
 		const foundRoom = await findRoom(roomId);
-		if (foundRoom.playersCounter == 2) {
-			alert("Sala cheia");
-			return;
-		}
+		// if (foundRoom.playersCounter == 2) {
+		// 	alert("Sala cheia");
+		// 	return;
+		// }
 		if (foundRoom) {
 			await joinRoom(foundRoom);
+			// return;
 			history.push({
 				pathname: `/rooms/${roomId}`,
 				state: { roomId: roomId },
