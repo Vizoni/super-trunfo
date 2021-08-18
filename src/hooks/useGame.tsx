@@ -3,6 +3,7 @@ import { CurrentUserContext } from "../contexts/CurrentUser";
 import { GameDeckContext } from "../contexts/GameDeck";
 import { PlayersContext } from "../contexts/Players";
 import { RoomContext } from "../contexts/Room";
+import { Card } from "../interfaces/Card";
 import { Player } from "../interfaces/Player";
 
 export function useGame() {
@@ -32,13 +33,15 @@ export function useGame() {
 			createdAt: new Date().toISOString().slice(0, 10),
 			playersCounter: 1,
 			players: [],
-			turn: "Player 1",
+			turn: "",
 			deck: deck.generateNewGameDeck(),
 		};
 		const roomId = await room.createRoom(newRoom);
 		newRoom.id = roomId;
 		const playerId = await players.addPlayerToRoom(roomId, newPlayer);
 		newPlayer.id = playerId;
+		// primeiro turno é de quem criou a sala, não dá pra setar no newRoom.turn o playerId pq o playerId ainda n foi setado.
+		await room.updateGameTurn(roomId, playerId);
 		await currentUser.setCurrentUser(newPlayer);
 		await room.setRoom(newRoom);
 		await startListenToAllContexts(roomId, playerId);
@@ -68,6 +71,52 @@ export function useGame() {
 		currentUser.addCardsToDeck(room.room.id, newCards);
 	}
 
+	function isCurrentUserTurn() {
+		if (currentUser.currentUser.id == room.room.turn) {
+			return true;
+		}
+		return false;
+	}
+
+	function getFirstCardOfBothPlayers() {
+		let firstCardOfBothPlayers: any = [];
+		if (players.players.length <= 1) {
+			return;
+		}
+		players.players.forEach((singlePlayer) => {
+			firstCardOfBothPlayers.push(singlePlayer.deck[0]);
+		});
+		return firstCardOfBothPlayers;
+	}
+
+	function compareCards(attributeIndex: number) {
+		const arrayOfFirstCards = getFirstCardOfBothPlayers();
+		let firstCardPlayerOne = arrayOfFirstCards[0];
+		let firstCardPlayerTwo = arrayOfFirstCards[1];
+		console.log("card 1", firstCardPlayerOne);
+		console.log("card 2", firstCardPlayerTwo);
+
+		let cardWinner = "";
+		if (firstCardPlayerOne.isSuperTrunfo) {
+			console.log("PLAYER 1 É TRUNFO", firstCardPlayerOne);
+			cardWinner = firstCardPlayerOne;
+		} else if (firstCardPlayerTwo.isSuperTrunfo) {
+			console.log("PLAYER 2 É TRUNFO", firstCardPlayerTwo);
+			cardWinner = firstCardPlayerTwo;
+		} else if (
+			firstCardPlayerOne.attributes[attributeIndex] >
+			firstCardPlayerTwo.attributes[attributeIndex]
+		) {
+			console.log("PLAYER 1 GANHOU", firstCardPlayerOne);
+			cardWinner = firstCardPlayerOne;
+		} else {
+			cardWinner = firstCardPlayerTwo;
+			console.log("PLAYER 2 GANHOU", firstCardPlayerTwo);
+		}
+
+		// FALTA ATUALIZAR O TURNO!!!
+	}
+
 	return {
 		currentUser,
 		players,
@@ -78,5 +127,7 @@ export function useGame() {
 		joinRoom,
 		buyCards,
 		startListenToAllContexts,
+		isCurrentUserTurn,
+		compareCards,
 	};
 }

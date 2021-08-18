@@ -26,18 +26,28 @@ export function PlayersContextProvider({
 }: PlayersContextProviderProps) {
 	const [players, setPlayers] = useState<Player[]>([]);
 
-	function listenToPlayerUpdate(roomId: any) {
+	// useEffect(() => {
+	// 	console.log("useeffect", players);
+	// }, players);
+
+	async function listenToPlayerUpdate(roomId: any) {
 		let playerList: Player[] = [];
-		database.ref(`rooms/${roomId}/players`).on("value", (players) => {
-			if (players.val()) {
-				let arrayOfPlayers = Object.keys(players.val());
-				arrayOfPlayers.forEach((player, index) => {
-					playerList.push(players.val()[player]);
-				});
-			}
-		});
-		setPlayers(playerList);
-		playerList = [];
+		// console.log("========= players: roomId", roomId);
+		await database
+			.ref(`rooms/${roomId}/players`)
+			.on("value", (playersFromDatabase) => {
+				if (playersFromDatabase.val()) {
+					// console.log("=== PLAYERS", playersFromDatabase.val());
+					let arrayOfPlayers = Object.keys(playersFromDatabase.val());
+					// console.log("=== arrayOfPlayers", arrayOfPlayers);
+					arrayOfPlayers.forEach((singlePlayer, index) => {
+						playerList.push(playersFromDatabase.val()[singlePlayer]);
+					});
+					// console.log("=== PLAYERSLIST", playerList);
+					setPlayers(playerList);
+					playerList = [];
+				}
+			});
 	}
 
 	async function addPlayerToRoom(roomId: any, newPlayer: Player): Promise<any> {

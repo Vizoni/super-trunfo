@@ -25,6 +25,7 @@ type RoomContextType = {
 	updateRoomWithSecondPlayer: (roomId: string) => void;
 	getRoomById: (id: string) => Promise<any>;
 	updateRoom: (id: string) => void;
+	updateGameTurn: (roomId: string, nextPlayerId: string) => void;
 	updatePlayerDeck: (playerId: string, cards: Card[]) => void;
 };
 
@@ -52,6 +53,10 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				});
 			}
 		});
+	}
+
+	async function updateGameTurn(roomId: string, nextPlayerId: string) {
+		await database.ref(`rooms/${roomId}`).update({ turn: nextPlayerId });
 	}
 
 	async function getRoomById(id: string) {
@@ -89,6 +94,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				updateRoomWithSecondPlayer,
 				getRoomById,
 				updateRoom,
+				updateGameTurn,
 				updatePlayerDeck,
 			}}
 		>

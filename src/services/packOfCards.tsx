@@ -8,6 +8,10 @@ export const PACK_OF_CARDS = [
 				name: "Potência",
 				value: "150",
 			},
+			{
+				name: "Velocidade Máxima",
+				value: "110",
+			},
 		],
 	},
 	{
@@ -18,6 +22,10 @@ export const PACK_OF_CARDS = [
 			{
 				name: "Potência",
 				value: "300",
+			},
+			{
+				name: "Velocidade Máxima",
+				value: "160",
 			},
 		],
 	},
@@ -30,6 +38,10 @@ export const PACK_OF_CARDS = [
 				name: "Potência",
 				value: "200",
 			},
+			{
+				name: "Velocidade Máxima",
+				value: "130",
+			},
 		],
 	},
 	{
@@ -40,6 +52,10 @@ export const PACK_OF_CARDS = [
 			{
 				name: "Potência",
 				value: "500",
+			},
+			{
+				name: "Velocidade Máxima",
+				value: "300",
 			},
 		],
 	},
@@ -52,6 +68,10 @@ export const PACK_OF_CARDS = [
 				name: "Potência",
 				value: "50",
 			},
+			{
+				name: "Velocidade Máxima",
+				value: "90",
+			},
 		],
 	},
 	{
@@ -62,6 +82,10 @@ export const PACK_OF_CARDS = [
 			{
 				name: "Potência",
 				value: "200",
+			},
+			{
+				name: "Velocidade Máxima",
+				value: "80",
 			},
 		],
 	},
