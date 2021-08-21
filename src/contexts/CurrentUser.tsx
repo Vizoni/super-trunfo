@@ -8,7 +8,7 @@ type CurrentUserContextType = {
 	currentUserDeck: Card[];
 	setCurrentUserDeck: (data: Card[]) => void;
 	setCurrentUser: (data: Player) => void;
-	addCardsToDeck: (roomId: string, newCards: Card[]) => void;
+	// addCardsToDeck: (roomId: string, newCards: Card[]) => void;
 	listenToCurrentUserUpdate: (roomId: string, playerId: string) => void;
 };
 
@@ -34,29 +34,55 @@ export function CurrentUserContextProvider({
 		console.log("CURRENTUSER - Context:", currentUser);
 	}, [currentUser]);
 
-	// check if there is already any card on current users deck
-	// if already has cards then add the new Cards at the last position
-	// if doesn't has cards yet, it add the draw cards to it first position
-	async function addCardsToDeck(roomId: string, newCards: Card[]) {
-		await database
-			.ref(`rooms/${roomId}/players/${currentUser.id}/deck`)
-			.once("value", (currentDeck) => {
-				if (currentDeck.exists()) {
-					newCards = [...currentDeck.val(), ...newCards];
-				}
-				database
-					.ref(`rooms/${roomId}/players/${currentUser.id}`)
-					.update({ deck: newCards });
-			});
-		setCurrentUserDeck(newCards);
-	}
+	useEffect(() => {
+		console.log("CURRENTUSER DECK- Context:", currentUserDeck);
+	}, [currentUserDeck]);
+
+	// // check if there is already any card on current users deck
+	// // if already has cards then add the new Cards at the last position
+	// // if doesn't has cards yet, it add the draw cards to it first position
+	// async function addCardsToDeck(roomId: string, newCards: Card[]) {
+	// 	console.log("ADD", roomId, newCards);
+	// 	await database
+	// 		.ref(`rooms/${roomId}/players/${currentUser.id}/deck`)
+	// 		.once("value", (currentDeck) => {
+	// 			if (currentDeck.exists()) {
+	// 				newCards = [...currentDeck.val(), ...newCards];
+	// 			}
+	// 			database
+	// 				.ref(`rooms/${roomId}/players/${currentUser.id}`)
+	// 				.update({ deck: newCards });
+	// 		});
+	// 	setCurrentUserDeck(newCards);
+	// }
 
 	async function listenToCurrentUserUpdate(roomId: string, playerId: string) {
 		await database
 			.ref(`rooms/${roomId}/players/${playerId}`)
 			.on("value", (user) => {
+				console.log("atualizando USER..", user.val());
 				if (user.exists()) {
 					setCurrentUser(user.val());
+				}
+			});
+		await database
+			.ref(`rooms/${roomId}/players/${playerId}/deck`)
+			.on("value", (deck) => {
+				console.log("atualizando deck..", deck.exists(), deck.val());
+				if (deck.exists()) {
+					console.log("A");
+					if (!deck.val().length) {
+						console.log("B");
+						const arrayAuxiliarToTransformObjectIntoArrayElement = [];
+						arrayAuxiliarToTransformObjectIntoArrayElement.push(deck.val());
+						setCurrentUserDeck(arrayAuxiliarToTransformObjectIntoArrayElement);
+					} else {
+						console.log("C");
+						setCurrentUserDeck(deck.val());
+					}
+				} else {
+					console.log("D");
+					setCurrentUserDeck([]);
 				}
 			});
 	}
@@ -68,7 +94,7 @@ export function CurrentUserContextProvider({
 				setCurrentUser,
 				currentUserDeck,
 				setCurrentUserDeck,
-				addCardsToDeck,
+				// addCardsToDeck,
 				listenToCurrentUserUpdate,
 			}}
 		>

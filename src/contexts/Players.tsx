@@ -8,10 +8,15 @@ type PlayersContextType = {
 	setPlayers: (data: Player[]) => void;
 	listenToPlayerUpdate: (key: any) => void;
 	addPlayerToRoom: (roomId: string, player: Player) => Promise<any>;
-	setPlayersDeck: (
-		roomId: string | undefined,
-		newCards: Card[],
-		halfDeckIndex: string
+	addCardsToDeck: (
+		roomId: string,
+		playerId: string,
+		newCards: Card[]
+	) => Promise<any>;
+	removeCardsFromDeck: (
+		roomId: string,
+		playerId: string,
+		cardsToBeRemoved: Card[]
 	) => Promise<any>;
 };
 
@@ -63,24 +68,46 @@ export function PlayersContextProvider({
 		return playerId;
 	}
 
-	async function setPlayersDeck(
-		roomId: string | undefined,
-		shuffledCards: Card[],
-		halfDeckIndex: string
-	): Promise<any> {
-		// console.log("player context - setplayerdeck");
-		// const a = await database
-		// 	.ref(`rooms/${roomId}/players`)
-		// 	.
-		// .once("value", (players) => {
-		// 	if (players.val()) {
-		// 		let arrayOfPlayers = Object.keys(players.val());
-		// 		arrayOfPlayers.forEach((player, index) => {
-		// 			playerList.push(players.val()[player]);
-		// 		});
-		// 	}
-		// });
-		// database.ref(`rooms/${roomId}/players/${playerId}`).set({ deck: newCards });
+	// check if there is already any card on current users deck
+	// if already has cards then add the new Cards at the last position
+	// if doesn't has cards yet, it add the draw cards to it first position
+	async function addCardsToDeck(
+		roomId: string,
+		playerId: string,
+		newCards: Card[]
+	) {
+		console.log("ADD", roomId, playerId, newCards);
+		await database
+			.ref(`rooms/${roomId}/players/${playerId}/deck`)
+			.once("value", (currentDeck) => {
+				if (currentDeck.exists()) {
+					newCards = [...currentDeck.val(), ...newCards];
+				}
+				database
+					.ref(`rooms/${roomId}/players/${playerId}`)
+					.update({ deck: newCards });
+			});
+	}
+
+	async function removeCardsFromDeck(
+		roomId: string,
+		playerId: string,
+		cardToBeRemoved: Card[]
+	) {
+		console.log("REMOVE", roomId, playerId, cardToBeRemoved);
+		let cardsUpdated: Card[];
+		await database
+			.ref(`rooms/${roomId}/players/${playerId}/deck`)
+			.once("value", (currentDeck) => {
+				if (currentDeck.exists()) {
+					console.log("deck do perdedor", currentDeck.val());
+					cardsUpdated = currentDeck.val().pop();
+					console.log("CARDS UP", cardsUpdated);
+				}
+				database
+					.ref(`rooms/${roomId}/players/${playerId}`)
+					.update({ deck: cardsUpdated });
+			});
 	}
 
 	return (
@@ -90,7 +117,8 @@ export function PlayersContextProvider({
 				setPlayers,
 				listenToPlayerUpdate,
 				addPlayerToRoom,
-				setPlayersDeck,
+				addCardsToDeck,
+				removeCardsFromDeck,
 			}}
 		>
 			{children}

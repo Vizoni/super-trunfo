@@ -1,14 +1,14 @@
 import { useGame } from "../hooks/useGame";
 
 export function CardComponent(currentCard: any) {
-	const { isCurrentUserTurn, compareCards } = useGame();
+	const { isCurrentUserTurn, cardMatch } = useGame();
 
 	function handleClick(cardIndexInCurrentUserDeck: any) {
 		console.log("hand click", cardIndexInCurrentUserDeck);
 		if (!isCurrentUserTurn()) {
 			return;
 		}
-		compareCards(cardIndexInCurrentUserDeck);
+		cardMatch(cardIndexInCurrentUserDeck);
 	}
 
 	return (

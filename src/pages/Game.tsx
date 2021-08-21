@@ -19,6 +19,10 @@ export function Game() {
 		startGame();
 	}, [players]);
 
+	useEffect(() => {
+		console.log("Mudou o room", room.room);
+	}, [room]);
+
 	return (
 		<>
 			{room.room && room.room.playersCounter < 2 && (

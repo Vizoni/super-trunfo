@@ -68,7 +68,8 @@ export function useGame() {
 
 	async function buyCards(amountOfCards: number) {
 		const newCards = deck.playerDrawCards(room.room, amountOfCards);
-		currentUser.addCardsToDeck(room.room.id, newCards);
+		// currentUser.addCardsToDeck(room.room.id, newCards);
+		players.addCardsToDeck(room.room.id, currentUser.currentUser.id, newCards);
 	}
 
 	function isCurrentUserTurn() {
@@ -89,32 +90,77 @@ export function useGame() {
 		return firstCardOfBothPlayers;
 	}
 
+	function cardMatch(attributeIndex: number) {
+		// FALTA ATUALIZAR O TURNO!!!
+		// faz o combate dos cards
+		// atualiza o turn
+		// dá os cards pro vencedor
+		// tira os cards do perdedor
+		const winnerOfMatchObject = compareCards(attributeIndex);
+		console.log(
+			"CARD MATCH",
+			winnerOfMatchObject,
+			typeof winnerOfMatchObject,
+			room.room
+		);
+		if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
+			console.log("é a vez do outro - room id", room.room.id);
+			room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
+		}
+
+		let cardsRelated = [];
+		cardsRelated.push(winnerOfMatchObject.cardToReceive);
+		players.addCardsToDeck(
+			room.room.id,
+			winnerOfMatchObject.winnerPlayerId,
+			cardsRelated
+		);
+		players.removeCardsFromDeck(
+			room.room.id,
+			winnerOfMatchObject.loserPlayerId,
+			cardsRelated
+		);
+		console.log("FIMmm", winnerOfMatchObject);
+	}
+
 	function compareCards(attributeIndex: number) {
 		const arrayOfFirstCards = getFirstCardOfBothPlayers();
 		let firstCardPlayerOne = arrayOfFirstCards[0];
 		let firstCardPlayerTwo = arrayOfFirstCards[1];
-		console.log("card 1", firstCardPlayerOne);
-		console.log("card 2", firstCardPlayerTwo);
-
-		let cardWinner = "";
+		let combatObjectResponse = {
+			cardToReceive: {} as Card,
+			winnerPlayerId: "",
+			loserPlayerId: "",
+		};
+		console.log("FIRST PLAYER CARD", firstCardPlayerOne);
+		console.log("SECOND PLAYER CARD", firstCardPlayerTwo);
 		if (firstCardPlayerOne.isSuperTrunfo) {
-			console.log("PLAYER 1 É TRUNFO", firstCardPlayerOne);
-			cardWinner = firstCardPlayerOne;
+			// console.log("A1", firstCardPlayerOne.isSuperTrunfo);
+			combatObjectResponse.cardToReceive = firstCardPlayerTwo;
+			combatObjectResponse.winnerPlayerId = players.players[0].id;
+			combatObjectResponse.loserPlayerId = players.players[1].id;
 		} else if (firstCardPlayerTwo.isSuperTrunfo) {
-			console.log("PLAYER 2 É TRUNFO", firstCardPlayerTwo);
-			cardWinner = firstCardPlayerTwo;
+			// console.log("B1", firstCardPlayerTwo.isSuperTrunfo);
+			combatObjectResponse.cardToReceive = firstCardPlayerOne;
+			combatObjectResponse.winnerPlayerId = players.players[1].id;
+			combatObjectResponse.loserPlayerId = players.players[0].id;
 		} else if (
 			firstCardPlayerOne.attributes[attributeIndex] >
 			firstCardPlayerTwo.attributes[attributeIndex]
 		) {
-			console.log("PLAYER 1 GANHOU", firstCardPlayerOne);
-			cardWinner = firstCardPlayerOne;
+			// console.log("C1", firstCardPlayerOne.attributes[attributeIndex]);
+			// console.log("C2", firstCardPlayerTwo.attributes[attributeIndex]);
+			combatObjectResponse.cardToReceive = firstCardPlayerTwo;
+			combatObjectResponse.winnerPlayerId = players.players[0].id;
+			combatObjectResponse.loserPlayerId = players.players[1].id;
 		} else {
-			cardWinner = firstCardPlayerTwo;
-			console.log("PLAYER 2 GANHOU", firstCardPlayerTwo);
+			// console.log("D1", firstCardPlayerOne.attributes[attributeIndex]);
+			// console.log("D2", firstCardPlayerTwo.attributes[attributeIndex]);
+			combatObjectResponse.cardToReceive = firstCardPlayerOne;
+			combatObjectResponse.winnerPlayerId = players.players[1].id;
+			combatObjectResponse.loserPlayerId = players.players[0].id;
 		}
-
-		// FALTA ATUALIZAR O TURNO!!!
+		return combatObjectResponse;
 	}
 
 	return {
@@ -128,6 +174,6 @@ export function useGame() {
 		buyCards,
 		startListenToAllContexts,
 		isCurrentUserTurn,
-		compareCards,
+		cardMatch,
 	};
 }
