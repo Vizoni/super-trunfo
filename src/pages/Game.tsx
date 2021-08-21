@@ -15,13 +15,13 @@ export function Game() {
 		}
 	}
 
-	useEffect(() => {
-		startGame();
-	}, [players]);
+	// useEffect(() => {
+	// 	startGame();
+	// }, [players]);
 
-	useEffect(() => {
-		console.log("Mudou o room", room.room);
-	}, [room]);
+	// useEffect(() => {
+	// 	console.log("Mudou o room", room.room);
+	// }, [room]);
 
 	return (
 		<>
@@ -30,6 +30,13 @@ export function Game() {
 					<h4>Aguardando segundo jogador...</h4>
 				</div>
 			)}
+			{/* {playerLoser.id && playerLoser.id == currentUser.currentUser.id && (
+				<h2>Você Perdeu!</h2>
+			)}
+			{playerLoser.id && playerLoser.id != currentUser.currentUser.id && (
+				<h2>Você Ganhou!</h2>
+			)}
+			{!playerLoser.id && ( */}
 			<div>
 				{/* <button onClick={changeTurn}>muda turno</button> */}
 				<HUDComponent />
@@ -37,6 +44,7 @@ export function Game() {
 					currentCard={currentUser.currentUserDeck[0]}
 				></CardComponent>
 			</div>
+			{/* )} */}
 		</>
 	);
 }

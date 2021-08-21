@@ -76,7 +76,6 @@ export function PlayersContextProvider({
 		playerId: string,
 		newCards: Card[]
 	) {
-		console.log("ADD", roomId, playerId, newCards);
 		await database
 			.ref(`rooms/${roomId}/players/${playerId}/deck`)
 			.once("value", (currentDeck) => {
@@ -92,18 +91,33 @@ export function PlayersContextProvider({
 	async function removeCardsFromDeck(
 		roomId: string,
 		playerId: string,
-		cardToBeRemoved: Card[]
+		cardsToBeRemoved: Card[]
 	) {
-		console.log("REMOVE", roomId, playerId, cardToBeRemoved);
-		let cardsUpdated: Card[];
+		console.log("REMOVE CARDS");
+		console.log("param playerId", playerId);
+		console.log("param cardsToBeRemoved", cardsToBeRemoved);
+		let cardsUpdated: Card[] = [];
 		await database
 			.ref(`rooms/${roomId}/players/${playerId}/deck`)
 			.once("value", (currentDeck) => {
+				console.log("REMOVE A", currentDeck.exists());
 				if (currentDeck.exists()) {
-					console.log("deck do perdedor", currentDeck.val());
-					cardsUpdated = currentDeck.val().pop();
-					console.log("CARDS UP", cardsUpdated);
+					console.log("REMOVE A2", currentDeck.val());
+					if (currentDeck.val().length == 1) {
+						console.log("REMOVE A3");
+						cardsUpdated = [];
+					} else {
+						console.log("REMOVE B", currentDeck.val());
+						// let deckWithCardsAlreadyRemoved = currentDeck.val().pop();
+						let deckWithCardsAlreadyRemoved = currentDeck.val().slice(0, 1);
+						console.log("REMOVE C0", currentDeck.val());
+						console.log("REMOVE C1", deckWithCardsAlreadyRemoved);
+						cardsUpdated.push(currentDeck.val().pop());
+						console.log("REMOVE C2", currentDeck.val());
+						console.log("REMOVE C3", cardsUpdated);
+					}
 				}
+				console.log("REMOVE D", cardsUpdated);
 				database
 					.ref(`rooms/${roomId}/players/${playerId}`)
 					.update({ deck: cardsUpdated });

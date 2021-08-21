@@ -6,26 +6,26 @@ export const PACK_OF_CARDS = [
 		attributes: [
 			{
 				name: "Potência",
-				value: "150",
+				value: 150,
 			},
 			{
 				name: "Velocidade Máxima",
-				value: "110",
+				value: 110,
 			},
 		],
 	},
 	{
 		name: "Ford Focus",
 		type: "B",
-		isSuperTrunfo: true,
+		isSuperTrunfo: false,
 		attributes: [
 			{
 				name: "Potência",
-				value: "300",
+				value: 300,
 			},
 			{
 				name: "Velocidade Máxima",
-				value: "160",
+				value: 160,
 			},
 		],
 	},
@@ -36,26 +36,26 @@ export const PACK_OF_CARDS = [
 		attributes: [
 			{
 				name: "Potência",
-				value: "200",
+				value: 200,
 			},
 			{
 				name: "Velocidade Máxima",
-				value: "130",
+				value: 130,
 			},
 		],
 	},
 	{
 		name: "Ferrari",
 		type: "A",
-		isSuperTrunfo: false,
+		isSuperTrunfo: true,
 		attributes: [
 			{
 				name: "Potência",
-				value: "500",
+				value: 500,
 			},
 			{
 				name: "Velocidade Máxima",
-				value: "300",
+				value: 300,
 			},
 		],
 	},
@@ -66,11 +66,11 @@ export const PACK_OF_CARDS = [
 		attributes: [
 			{
 				name: "Potência",
-				value: "50",
+				value: 50,
 			},
 			{
 				name: "Velocidade Máxima",
-				value: "90",
+				value: 90,
 			},
 		],
 	},
@@ -81,11 +81,11 @@ export const PACK_OF_CARDS = [
 		attributes: [
 			{
 				name: "Potência",
-				value: "200",
+				value: 200,
 			},
 			{
 				name: "Velocidade Máxima",
-				value: "80",
+				value: 80,
 			},
 		],
 	},

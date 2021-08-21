@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUser";
 import { GameDeckContext } from "../contexts/GameDeck";
 import { PlayersContext } from "../contexts/Players";
@@ -11,6 +11,28 @@ export function useGame() {
 	const players = useContext(PlayersContext);
 	const room = useContext(RoomContext);
 	const deck = useContext(GameDeckContext);
+	// const [playerLoser, setPlayerLoser] = useState({ id: "" });
+
+	// useEffect(() => {
+	// 	console.log("use effect players", players);
+	// 	console.log("use effect currentuser", currentUser);
+	// 	isGameOver();
+	// }, [players, currentUser]);
+
+	// useEffect(() => {
+	// 	console.log("O LSOER É", playerLoser);
+	// }, [playerLoser]);
+
+	// function isGameOver() {
+	// 	// detecta se tem algum player com 0 cards
+	// 	players.players.forEach((player) => {
+	// 		console.log("IS GAME OVER - PLAYER", player);
+	// 		if (!player.deck) {
+	// 			console.log("zerou o deck");
+	// 			setPlayerLoser({ ...playerLoser, id: player.id });
+	// 		}
+	// 	});
+	// }
 
 	// main function to start listening the contexts and make them get updated regularly
 	// method has to be called just two times: Or when you create a room or when someone joins it.
@@ -90,37 +112,25 @@ export function useGame() {
 		return firstCardOfBothPlayers;
 	}
 
-	function cardMatch(attributeIndex: number) {
-		// FALTA ATUALIZAR O TURNO!!!
-		// faz o combate dos cards
-		// atualiza o turn
-		// dá os cards pro vencedor
-		// tira os cards do perdedor
+	async function cardMatch(attributeIndex: number) {
 		const winnerOfMatchObject = compareCards(attributeIndex);
-		console.log(
-			"CARD MATCH",
-			winnerOfMatchObject,
-			typeof winnerOfMatchObject,
-			room.room
-		);
-		if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
-			console.log("é a vez do outro - room id", room.room.id);
-			room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
-		}
 
 		let cardsRelated = [];
 		cardsRelated.push(winnerOfMatchObject.cardToReceive);
-		players.addCardsToDeck(
+		await players.addCardsToDeck(
 			room.room.id,
 			winnerOfMatchObject.winnerPlayerId,
 			cardsRelated
 		);
-		players.removeCardsFromDeck(
+		await players.removeCardsFromDeck(
 			room.room.id,
 			winnerOfMatchObject.loserPlayerId,
 			cardsRelated
 		);
-		console.log("FIMmm", winnerOfMatchObject);
+		if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
+			room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
+		}
+		// isGameOver();
 	}
 
 	function compareCards(attributeIndex: number) {
@@ -132,30 +142,28 @@ export function useGame() {
 			winnerPlayerId: "",
 			loserPlayerId: "",
 		};
-		console.log("FIRST PLAYER CARD", firstCardPlayerOne);
-		console.log("SECOND PLAYER CARD", firstCardPlayerTwo);
+		console.log("FIRST CARD", firstCardPlayerOne);
+		console.log("second CARD", firstCardPlayerTwo);
 		if (firstCardPlayerOne.isSuperTrunfo) {
-			// console.log("A1", firstCardPlayerOne.isSuperTrunfo);
+			console.log("COMBAT A");
 			combatObjectResponse.cardToReceive = firstCardPlayerTwo;
 			combatObjectResponse.winnerPlayerId = players.players[0].id;
 			combatObjectResponse.loserPlayerId = players.players[1].id;
 		} else if (firstCardPlayerTwo.isSuperTrunfo) {
-			// console.log("B1", firstCardPlayerTwo.isSuperTrunfo);
+			console.log("COMBAT B");
 			combatObjectResponse.cardToReceive = firstCardPlayerOne;
 			combatObjectResponse.winnerPlayerId = players.players[1].id;
 			combatObjectResponse.loserPlayerId = players.players[0].id;
 		} else if (
-			firstCardPlayerOne.attributes[attributeIndex] >
-			firstCardPlayerTwo.attributes[attributeIndex]
+			firstCardPlayerOne.attributes[attributeIndex].value >
+			firstCardPlayerTwo.attributes[attributeIndex].value
 		) {
-			// console.log("C1", firstCardPlayerOne.attributes[attributeIndex]);
-			// console.log("C2", firstCardPlayerTwo.attributes[attributeIndex]);
+			console.log("COMBAT C");
 			combatObjectResponse.cardToReceive = firstCardPlayerTwo;
 			combatObjectResponse.winnerPlayerId = players.players[0].id;
 			combatObjectResponse.loserPlayerId = players.players[1].id;
 		} else {
-			// console.log("D1", firstCardPlayerOne.attributes[attributeIndex]);
-			// console.log("D2", firstCardPlayerTwo.attributes[attributeIndex]);
+			console.log("COMBAT D");
 			combatObjectResponse.cardToReceive = firstCardPlayerOne;
 			combatObjectResponse.winnerPlayerId = players.players[1].id;
 			combatObjectResponse.loserPlayerId = players.players[0].id;

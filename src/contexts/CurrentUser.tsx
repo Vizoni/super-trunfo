@@ -70,18 +70,18 @@ export function CurrentUserContextProvider({
 			.on("value", (deck) => {
 				console.log("atualizando deck..", deck.exists(), deck.val());
 				if (deck.exists()) {
-					console.log("A");
+					console.log("CURRENT - A");
 					if (!deck.val().length) {
-						console.log("B");
+						console.log("CURRENT - B");
 						const arrayAuxiliarToTransformObjectIntoArrayElement = [];
 						arrayAuxiliarToTransformObjectIntoArrayElement.push(deck.val());
 						setCurrentUserDeck(arrayAuxiliarToTransformObjectIntoArrayElement);
 					} else {
-						console.log("C");
+						console.log("CURRENT - C");
 						setCurrentUserDeck(deck.val());
 					}
 				} else {
-					console.log("D");
+					console.log("CURRENT - D");
 					setCurrentUserDeck([]);
 				}
 			});
