@@ -13,11 +13,7 @@ type PlayersContextType = {
 		playerId: string,
 		newCards: Card[]
 	) => Promise<any>;
-	removeCardsFromDeck: (
-		roomId: string,
-		playerId: string,
-		cardsToBeRemoved: Card[]
-	) => Promise<any>;
+	removeFirstCardFromDeck: (roomId: string, playerId: string) => Promise<any>;
 };
 
 type PlayersContextProviderProps = {
@@ -88,36 +84,21 @@ export function PlayersContextProvider({
 			});
 	}
 
-	async function removeCardsFromDeck(
-		roomId: string,
-		playerId: string,
-		cardsToBeRemoved: Card[]
-	) {
-		console.log("REMOVE CARDS");
-		console.log("param playerId", playerId);
-		console.log("param cardsToBeRemoved", cardsToBeRemoved);
+	// o card a ser removido sempre será o primeiro do deck do player.
+	async function removeFirstCardFromDeck(roomId: string, playerId: string) {
 		let cardsUpdated: Card[] = [];
 		await database
 			.ref(`rooms/${roomId}/players/${playerId}/deck`)
 			.once("value", (currentDeck) => {
-				console.log("REMOVE A", currentDeck.exists());
 				if (currentDeck.exists()) {
-					console.log("REMOVE A2", currentDeck.val());
 					if (currentDeck.val().length == 1) {
-						console.log("REMOVE A3");
 						cardsUpdated = [];
 					} else {
-						console.log("REMOVE B", currentDeck.val());
-						// let deckWithCardsAlreadyRemoved = currentDeck.val().pop();
-						let deckWithCardsAlreadyRemoved = currentDeck.val().slice(0, 1);
-						console.log("REMOVE C0", currentDeck.val());
-						console.log("REMOVE C1", deckWithCardsAlreadyRemoved);
-						cardsUpdated.push(currentDeck.val().pop());
-						console.log("REMOVE C2", currentDeck.val());
-						console.log("REMOVE C3", cardsUpdated);
+						let currentDeckFromDB = currentDeck.val();
+						currentDeckFromDB.splice(0, 1);
+						cardsUpdated = currentDeckFromDB;
 					}
 				}
-				console.log("REMOVE D", cardsUpdated);
 				database
 					.ref(`rooms/${roomId}/players/${playerId}`)
 					.update({ deck: cardsUpdated });
@@ -132,7 +113,7 @@ export function PlayersContextProvider({
 				listenToPlayerUpdate,
 				addPlayerToRoom,
 				addCardsToDeck,
-				removeCardsFromDeck,
+				removeFirstCardFromDeck,
 			}}
 		>
 			{children}
