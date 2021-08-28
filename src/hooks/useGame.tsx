@@ -5,34 +5,25 @@ import { PlayersContext } from "../contexts/Players";
 import { RoomContext } from "../contexts/Room";
 import { Card } from "../interfaces/Card";
 import { Player } from "../interfaces/Player";
+import { PACK_OF_CARDS } from "../services/packOfCards";
 
 export function useGame() {
 	const currentUser = useContext(CurrentUserContext);
 	const players = useContext(PlayersContext);
 	const room = useContext(RoomContext);
 	const deck = useContext(GameDeckContext);
-	// const [playerLoser, setPlayerLoser] = useState({ id: "" });
 
-	// useEffect(() => {
-	// 	console.log("use effect players", players);
-	// 	console.log("use effect currentuser", currentUser);
-	// 	isGameOver();
-	// }, [players, currentUser]);
+	// everytime the current user's deck changes
+	useEffect(() => {
+		isGameOver();
+	}, [currentUser.currentUserDeck]);
 
-	// useEffect(() => {
-	// 	console.log("O LSOER É", playerLoser);
-	// }, [playerLoser]);
-
-	// function isGameOver() {
-	// 	// detecta se tem algum player com 0 cards
-	// 	players.players.forEach((player) => {
-	// 		console.log("IS GAME OVER - PLAYER", player);
-	// 		if (!player.deck) {
-	// 			console.log("zerou o deck");
-	// 			setPlayerLoser({ ...playerLoser, id: player.id });
-	// 		}
-	// 	});
-	// }
+	// checks if the current user deck has the same ammount of cards from the full deck. If so, he's the winner.
+	function isGameOver() {
+		if (currentUser.currentUserDeck.length == PACK_OF_CARDS.length) {
+			room.updateRoomWithWinnerPlayer(currentUser.currentUser.id);
+		}
+	}
 
 	// main function to start listening the contexts and make them get updated regularly
 	// method has to be called just two times: Or when you create a room or when someone joins it.
@@ -57,6 +48,7 @@ export function useGame() {
 			players: [],
 			turn: "",
 			deck: deck.generateNewGameDeck(),
+			winnerPlayerId: "",
 		};
 		const roomId = await room.createRoom(newRoom);
 		newRoom.id = roomId;
@@ -117,14 +109,14 @@ export function useGame() {
 
 		let cardsRelated = [];
 		cardsRelated = winnerOfMatchObject.cardsToReceive;
+		await players.removeFirstCardFromDeck(
+			room.room.id,
+			winnerOfMatchObject.winnerPlayerId
+		);
 		await players.addCardsToDeck(
 			room.room.id,
 			winnerOfMatchObject.winnerPlayerId,
 			cardsRelated
-		);
-		await players.removeFirstCardFromDeck(
-			room.room.id,
-			winnerOfMatchObject.winnerPlayerId
 		);
 		await players.removeFirstCardFromDeck(
 			room.room.id,
@@ -133,7 +125,6 @@ export function useGame() {
 		if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
 			room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
 		}
-		// isGameOver();
 	}
 
 	function compareCards(attributeIndex: number) {

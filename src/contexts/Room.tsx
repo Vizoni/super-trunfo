@@ -16,6 +16,7 @@ type Room = {
 	players: Player[];
 	turn: string;
 	deck: Card[];
+	winnerPlayerId: string;
 };
 
 type RoomContextType = {
@@ -27,6 +28,7 @@ type RoomContextType = {
 	updateRoom: (id: string) => void;
 	updateGameTurn: (roomId: string, nextPlayerId: string) => void;
 	updatePlayerDeck: (playerId: string, cards: Card[]) => void;
+	updateRoomWithWinnerPlayer: (winnerPlayerId: string) => void;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -40,6 +42,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		players: [],
 		turn: "",
 		deck: [],
+		winnerPlayerId: "",
 	});
 
 	async function updateRoom(key: any) {
@@ -69,6 +72,12 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		return roomResponse;
 	}
 
+	async function updateRoomWithWinnerPlayer(winnerPlayerId: string) {
+		await database
+			.ref(`rooms/${room.id}`)
+			.update({ winnerPlayerId: winnerPlayerId });
+	}
+
 	async function createRoom(room: Room) {
 		const roomId = await database.ref(`rooms/`).push(room).key;
 		await database.ref(`rooms/${roomId}`).update({ id: roomId });
@@ -96,6 +105,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				updateRoom,
 				updateGameTurn,
 				updatePlayerDeck,
+				updateRoomWithWinnerPlayer,
 			}}
 		>
 			{children}

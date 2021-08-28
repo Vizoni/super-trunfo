@@ -27,10 +27,6 @@ export function PlayersContextProvider({
 }: PlayersContextProviderProps) {
 	const [players, setPlayers] = useState<Player[]>([]);
 
-	// useEffect(() => {
-	// 	console.log("useeffect", players);
-	// }, players);
-
 	async function listenToPlayerUpdate(roomId: any) {
 		let playerList: Player[] = [];
 		// console.log("========= players: roomId", roomId);

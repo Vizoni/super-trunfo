@@ -23,12 +23,10 @@ export function GameDeckContextProvider({
 }: GameDeckContextProviderProps) {
 	const [deck, setDeck] = useState<Card[]>([]);
 
-	useEffect(() => {
-		console.log("DECK - Context:", deck);
-	}, [deck]);
-
 	function generateNewGameDeck() {
-		const cardsShuffled = shuffle(PACK_OF_CARDS);
+		// UTILIZA A CÓPIA DA ARRAY ORIGINAL DE CARDS PRA FAZER A COMPARAÇAO SE O PLAYER GANHOU
+		const copyOfPackOfCardsArray = [...PACK_OF_CARDS];
+		const cardsShuffled = shuffle(copyOfPackOfCardsArray);
 		setDeck(cardsShuffled);
 		return cardsShuffled;
 	}
@@ -50,7 +48,6 @@ export function GameDeckContextProvider({
 		// verifica se o contexto do Deck já está populado, se não estiver, vê se o contexto do room já está
 		if (deck && deck.length <= 0) {
 			if (room.deck && room.deck.length <= 0) {
-				console.log("Não existem cartas para comprar");
 				return [];
 			} else {
 				finalDeck = room.deck;
@@ -63,7 +60,6 @@ export function GameDeckContextProvider({
 			updateGameDeckFromDatabase(room.id, finalDeck);
 			return cardsToReceive;
 		}
-		console.log("Não existem cartas para comprar");
 		return [];
 	}
 
