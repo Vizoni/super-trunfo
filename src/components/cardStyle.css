@@ -1,17 +1,63 @@
 .card {
-	border: #9c27b0 3px solid;
+	border: #39373a 3px solid;
+	border-radius: 5%;
 	margin: 20px;
 	min-height: 50px;
 }
 
 .show-card-info {
-	color: #920;
+	color: rgb(240, 114, 56);
+}
+
+.type {
+	border: 3px solid #000000;
+	border-radius: 50%;
+	background-color: rgb(240, 237, 52);
+	margin: 10px;
+	width: 4%;
+	height: 5%;
+	text-align: center;
+	padding: 1%;
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: 0px 20px;
 }
 
 .hide-all {
 	border: rgb(63, 211, 166) 3px solid;
 }
 
-.card-attribute-item {
-	border: #000 3px solid;
+img {
+	max-width: 95%;
+	width: auto;
+	height: auto;
+	margin: 5px 20px;
+	display: table-cell;
+	vertical-align: middle;
+	border: 1px solid #000;
+}
+
+.attribute-list {
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+	padding: 10px;
+	background-color: rgb(240, 237, 52);
+	border: 3px solid #000;
+	border-radius: 5%;
+}
+
+.attribute-item {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+/* se o item da lista nao for o ultimo, põe borda em baixo */
+.attribute-item:not(:last-child) {
+	border-bottom: 1px solid #000;
 }

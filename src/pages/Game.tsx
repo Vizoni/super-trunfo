@@ -26,17 +26,19 @@ export function Game() {
 					{/* <CardComponent
 						currentCard={currentUser.currentUserDeck[0]}
 					></CardComponent> */}
-					{players.players.map((player, index) => {
-						if (player.deck) {
-							return (
-								<CardComponent
-									key={index}
-									currentCard={player.deck[0]}
-									isCurrentUserCard={player.id == currentUser.currentUser.id}
-								></CardComponent>
-							);
-						}
-					})}
+					<div className="cards-comparison">
+						{players.players.map((player, index) => {
+							if (player.deck) {
+								return (
+									<CardComponent
+										key={index}
+										currentCard={player.deck[0]}
+										isCurrentUserCard={player.id == currentUser.currentUser.id}
+									></CardComponent>
+								);
+							}
+						})}
+					</div>
 				</div>
 			)}
 		</>

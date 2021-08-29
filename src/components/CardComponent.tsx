@@ -16,17 +16,20 @@ export function CardComponent(props: any) {
 		<>
 			{props && props.currentCard && props.isCurrentUserCard && (
 				<div>
-					<div className={`card`}>
-						<h2>{props.currentCard.name}</h2>
-						<h2>{props.currentCard.type}</h2>
-						<h2>{props.isSuperTrunfo}</h2>
-						<div>
+					<div className="card">
+						<div className="header">
+							<h2>{props.currentCard.name}</h2>
+							<h2>{props.currentCard.isSuperTrunfo}</h2>
+							<h2 className="type">{props.currentCard.type}</h2>
+						</div>
+						<img src={props.currentCard.image}></img>
+						<div className="attribute-list">
 							{props.currentCard.attributes.map(
 								(attribute: any, index: any) => {
 									return (
 										<div
 											onClick={() => handleClick(index)}
-											className="card-attribute-item"
+											className="attribute-item"
 										>
 											<div>
 												<h2>{attribute.name}</h2>
