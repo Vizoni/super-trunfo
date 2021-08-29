@@ -1,10 +1,11 @@
+import { useEffect, useState } from "react";
 import { useGame } from "../hooks/useGame";
+import "./cardStyle.css";
 
-export function CardComponent(currentCard: any) {
+export function CardComponent(props: any) {
 	const { isCurrentUserTurn, cardMatch } = useGame();
 
 	function handleClick(cardIndexInCurrentUserDeck: any) {
-		console.log("hand click", cardIndexInCurrentUserDeck);
 		if (!isCurrentUserTurn()) {
 			return;
 		}
@@ -13,19 +14,19 @@ export function CardComponent(currentCard: any) {
 
 	return (
 		<>
-			{currentCard && currentCard.currentCard && (
+			{props && props.currentCard && props.isCurrentUserCard && (
 				<div>
-					<div style={{ border: "#9c27b0 3px solid" }}>
-						<h2>{currentCard.currentCard.name}</h2>
-						<h2>{currentCard.currentCard.type}</h2>
-						<h2>{currentCard.isSuperTrunfo}</h2>
+					<div className={`card`}>
+						<h2>{props.currentCard.name}</h2>
+						<h2>{props.currentCard.type}</h2>
+						<h2>{props.isSuperTrunfo}</h2>
 						<div>
-							{currentCard.currentCard.attributes.map(
+							{props.currentCard.attributes.map(
 								(attribute: any, index: any) => {
 									return (
 										<div
 											onClick={() => handleClick(index)}
-											style={{ border: "#000 3px solid" }}
+											className="card-attribute-item"
 										>
 											<div>
 												<h2>{attribute.name}</h2>
@@ -39,6 +40,11 @@ export function CardComponent(currentCard: any) {
 							)}
 						</div>
 					</div>
+				</div>
+			)}
+			{props && props.currentCard && !props.isCurrentUserCard && (
+				<div className={`card hide-all`}>
+					<h2>CARD DO OPONENTE (NAO VAI MOSTRAR OS DETALHES)</h2>
 				</div>
 			)}
 		</>

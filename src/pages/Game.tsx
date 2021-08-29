@@ -3,7 +3,7 @@ import { HUDComponent } from "../components/HUDComponent";
 import { useGame } from "../hooks/useGame";
 
 export function Game() {
-	const { currentUser, room } = useGame();
+	const { currentUser, room, players } = useGame();
 
 	return (
 		<>
@@ -23,9 +23,20 @@ export function Game() {
 			{!room.room.winnerPlayerId && (
 				<div>
 					<HUDComponent />
-					<CardComponent
+					{/* <CardComponent
 						currentCard={currentUser.currentUserDeck[0]}
-					></CardComponent>
+					></CardComponent> */}
+					{players.players.map((player, index) => {
+						if (player.deck) {
+							return (
+								<CardComponent
+									key={index}
+									currentCard={player.deck[0]}
+									isCurrentUserCard={player.id == currentUser.currentUser.id}
+								></CardComponent>
+							);
+						}
+					})}
 				</div>
 			)}
 		</>

@@ -13,13 +13,6 @@ export function Room() {
 
 	return (
 		<>
-			{/* <button
-				onClick={() => {
-					buyCards(1);
-				}}
-			>
-				Comprar cards
-			</button> */}
 			<Game></Game>
 		</>
 	);

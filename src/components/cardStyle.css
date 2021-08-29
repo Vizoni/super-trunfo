@@ -1,0 +1,17 @@
+.card {
+	border: #9c27b0 3px solid;
+	margin: 20px;
+	min-height: 50px;
+}
+
+.show-card-info {
+	color: #920;
+}
+
+.hide-all {
+	border: rgb(63, 211, 166) 3px solid;
+}
+
+.card-attribute-item {
+	border: #000 3px solid;
+}
