@@ -59,34 +59,34 @@ export const PACK_OF_CARDS = [
 			},
 		],
 	},
-	{
-		name: "Fiat Uno",
-		type: "D",
-		isSuperTrunfo: false,
-		attributes: [
-			{
-				name: "Potência",
-				value: 50,
-			},
-			{
-				name: "Velocidade Máxima",
-				value: 90,
-			},
-		],
-	},
-	{
-		name: "Kombi",
-		type: "C",
-		isSuperTrunfo: false,
-		attributes: [
-			{
-				name: "Potência",
-				value: 200,
-			},
-			{
-				name: "Velocidade Máxima",
-				value: 80,
-			},
-		],
-	},
+	// {
+	// 	name: "Fiat Uno",
+	// 	type: "D",
+	// 	isSuperTrunfo: false,
+	// 	attributes: [
+	// 		{
+	// 			name: "Potência",
+	// 			value: 50,
+	// 		},
+	// 		{
+	// 			name: "Velocidade Máxima",
+	// 			value: 90,
+	// 		},
+	// 	],
+	// },
+	// {
+	// 	name: "Kombi",
+	// 	type: "C",
+	// 	isSuperTrunfo: false,
+	// 	attributes: [
+	// 		{
+	// 			name: "Potência",
+	// 			value: 200,
+	// 		},
+	// 		{
+	// 			name: "Velocidade Máxima",
+	// 			value: 80,
+	// 		},
+	// 	],
+	// },
 ];
