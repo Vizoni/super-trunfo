@@ -80,8 +80,12 @@ export function useGame() {
 		await startListenToAllContexts(foundRoom.id, playerId);
 	}
 
-	async function buyCards(amountOfCards: number) {
-		const newCards = deck.playerDrawCards(room.room, amountOfCards);
+	async function buyCardsForGameStart() {
+		// player buys half of deck
+		const newCards = deck.playerDrawCards(
+			room.room,
+			Math.round(PACK_OF_CARDS.length / 2)
+		);
 		// currentUser.addCardsToDeck(room.room.id, newCards);
 		players.addCardsToDeck(room.room.id, currentUser.currentUser.id, newCards);
 	}
@@ -178,7 +182,7 @@ export function useGame() {
 		createNewRoom,
 		findRoom,
 		joinRoom,
-		buyCards,
+		buyCardsForGameStart,
 		startListenToAllContexts,
 		isCurrentUserTurn,
 		cardMatch,
