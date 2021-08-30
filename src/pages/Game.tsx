@@ -1,6 +1,7 @@
 import { CardComponent } from "../components/CardComponent";
 import { HUDComponent } from "../components/HUDComponent";
 import { useGame } from "../hooks/useGame";
+import "./../style.css";
 
 export function Game() {
 	const { currentUser, room, players } = useGame();
