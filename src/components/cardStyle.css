@@ -3,6 +3,9 @@
 	border-radius: 5%;
 	margin: 20px;
 	min-height: 50px;
+	background-color: #f5eb9061;
+	padding: 15px;
+	font-family: monospace;
 }
 
 .show-card-info {
@@ -25,6 +28,21 @@
 	flex-direction: row;
 	justify-content: space-between;
 	padding: 0px 20px;
+	align-items: center;
+	text-transform: uppercase;
+}
+
+.car-name {
+	font-size: 3em;
+	margin: 0px 10px;
+}
+
+.super-trunfo {
+	font-size: 2.5em;
+	background-color: #e02020;
+	padding: 6px;
+	color: white;
+	border-radius: 10px;
 }
 
 .hide-all {
@@ -39,12 +57,13 @@ img {
 	display: table-cell;
 	vertical-align: middle;
 	border: 1px solid #000;
+	border-radius: 3%;
 }
 
 .attribute-list {
 	display: flex;
 	flex-direction: column;
-	margin: 10px;
+	margin: 30px 10px;
 	padding: 10px;
 	background-color: rgb(240, 237, 52);
 	border: 3px solid #000;
@@ -55,6 +74,7 @@ img {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	cursor: pointer;
 }
 
 /* se o item da lista nao for o ultimo, põe borda em baixo */

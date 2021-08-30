@@ -12,14 +12,24 @@ export function CardComponent(props: any) {
 		cardMatch(cardIndexInCurrentUserDeck);
 	}
 
+	function displaySuperTrunfoBadge(isSuperTrunfo: boolean) {
+		if (isSuperTrunfo) {
+			return "SUPER-TRUNFO";
+		}
+	}
+
 	return (
 		<>
 			{props && props.currentCard && props.isCurrentUserCard && (
 				<div>
 					<div className="card">
 						<div className="header">
-							<h2>{props.currentCard.name}</h2>
-							<h2>{props.currentCard.isSuperTrunfo}</h2>
+							<h2 className="car-name">{props.currentCard.name}</h2>
+							{props.currentCard.isSuperTrunfo && (
+								<h2 className="super-trunfo">
+									{displaySuperTrunfoBadge(props.currentCard.isSuperTrunfo)}
+								</h2>
+							)}
 							<h2 className="type">{props.currentCard.type}</h2>
 						</div>
 						<img src={props.currentCard.image}></img>
