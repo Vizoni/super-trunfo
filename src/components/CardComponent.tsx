@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useGame } from "../hooks/useGame";
 import "./cardStyle.css";
 
@@ -12,12 +11,7 @@ export function CardComponent(props: any) {
 		cardMatch(cardIndexInCurrentUserDeck);
 	}
 
-	function shouldDisplay() {
-		if (props && props.currentCard) {
-		}
-	}
-
-	function displaySuperTrunfoBadge(isSuperTrunfo: boolean) {
+	function displaySuperTrunfoBadgeLabel(isSuperTrunfo: boolean) {
 		if (isSuperTrunfo) {
 			return "SUPER-TRUNFO";
 		}
@@ -25,13 +19,13 @@ export function CardComponent(props: any) {
 
 	return (
 		<>
-			{props && props.currentCard && props.isCurrentUserCard && (
+			{props.display && (
 				<div className="card">
 					<div className="header">
 						<h2 className="car-name">{props.currentCard.name}</h2>
 						{props.currentCard.isSuperTrunfo && (
 							<h2 className="super-trunfo">
-								{displaySuperTrunfoBadge(props.currentCard.isSuperTrunfo)}
+								{displaySuperTrunfoBadgeLabel(props.currentCard.isSuperTrunfo)}
 							</h2>
 						)}
 						<h2 className="type">{props.currentCard.type}</h2>
@@ -56,11 +50,11 @@ export function CardComponent(props: any) {
 					</div>
 				</div>
 			)}
-			{props && props.currentCard && !props.isCurrentUserCard && (
+			{!props.display && (
 				<div className="card hide-all">
 					<div>
 						<h1 className="hided-card-logo">Super Trunfo</h1>
-						<h2>Carros</h2>
+						<h2 className="deck-theme-name">Carros</h2>
 					</div>
 					<h4 className="hided-card-h4">{` < Carta do Oponente > `}</h4>
 				</div>

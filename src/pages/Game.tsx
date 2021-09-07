@@ -6,6 +6,28 @@ import "./../style.css";
 export function Game() {
 	const { currentUser, room, players } = useGame();
 
+	function canDisplayCard(player: any) {
+		if (playerHasAtLeastOneCardOnDeck(player)) {
+			if (isCurrentUserCard(player)) {
+				console.log("A - true");
+				return true;
+			}
+			if (!isCurrentUserCard(player) && room.room.isComparingCards) {
+				console.log("B - true");
+				return true;
+			}
+		}
+		console.log("C - false");
+		return false;
+	}
+
+	function isCurrentUserCard(player: any) {
+		return player.id == currentUser.currentUser.id ? true : false;
+	}
+	function playerHasAtLeastOneCardOnDeck(player: any) {
+		return player.deck.length > 0 ? true : false;
+	}
+
 	return (
 		<>
 			{room.room && room.room.playersCounter < 2 && (
@@ -24,9 +46,6 @@ export function Game() {
 			{!room.room.winnerPlayerId && (
 				<div>
 					<HUDComponent />
-					{/* <CardComponent
-						currentCard={currentUser.currentUserDeck[0]}
-					></CardComponent> */}
 					<div className="cards-comparison">
 						{players.players.map((player, index) => {
 							if (player.deck) {
@@ -34,7 +53,7 @@ export function Game() {
 									<CardComponent
 										key={index}
 										currentCard={player.deck[0]}
-										isCurrentUserCard={player.id == currentUser.currentUser.id}
+										display={canDisplayCard(player)}
 									></CardComponent>
 								);
 							}

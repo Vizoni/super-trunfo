@@ -49,6 +49,7 @@ export function useGame() {
 			turn: "",
 			deck: deck.generateNewGameDeck(),
 			winnerPlayerId: "",
+			isComparingCards: false,
 		};
 		const roomId = await room.createRoom(newRoom);
 		newRoom.id = roomId;
@@ -111,24 +112,30 @@ export function useGame() {
 	async function cardMatch(attributeIndex: number) {
 		const winnerOfMatchObject = compareCards(attributeIndex);
 
-		let cardsRelated = [];
-		cardsRelated = winnerOfMatchObject.cardsToReceive;
-		await players.removeFirstCardFromDeck(
-			room.room.id,
-			winnerOfMatchObject.winnerPlayerId
-		);
-		await players.addCardsToDeck(
-			room.room.id,
-			winnerOfMatchObject.winnerPlayerId,
-			cardsRelated
-		);
-		await players.removeFirstCardFromDeck(
-			room.room.id,
-			winnerOfMatchObject.loserPlayerId
-		);
-		if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
-			room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
-		}
+		console.log("USE GAME -> card match IS COMPARING TRUE");
+		room.updateRoomIsComparingCards(true);
+		setTimeout(() => {
+			let cardsRelated = [];
+			cardsRelated = winnerOfMatchObject.cardsToReceive;
+			console.log("USE GAME -> card match IS COMPARING FALSE");
+			room.updateRoomIsComparingCards(false);
+			players.removeFirstCardFromDeck(
+				room.room.id,
+				winnerOfMatchObject.winnerPlayerId
+			);
+			players.addCardsToDeck(
+				room.room.id,
+				winnerOfMatchObject.winnerPlayerId,
+				cardsRelated
+			);
+			players.removeFirstCardFromDeck(
+				room.room.id,
+				winnerOfMatchObject.loserPlayerId
+			);
+			if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
+				room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
+			}
+		}, 10000);
 	}
 
 	function compareCards(attributeIndex: number) {
