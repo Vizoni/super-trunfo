@@ -49,7 +49,10 @@ export function useGame() {
 			turn: "",
 			deck: deck.generateNewGameDeck(),
 			winnerPlayerId: "",
-			isComparingCards: false,
+			cardsComparison: {
+				isComparingCards: false,
+				attributeBeingCompared: "",
+			},
 		};
 		const roomId = await room.createRoom(newRoom);
 		newRoom.id = roomId;
@@ -111,14 +114,14 @@ export function useGame() {
 
 	async function cardMatch(attributeIndex: number) {
 		const winnerOfMatchObject = compareCards(attributeIndex);
-
-		console.log("USE GAME -> card match IS COMPARING TRUE");
-		room.updateRoomIsComparingCards(true);
+		room.updateRoomIsComparingCards(
+			true,
+			winnerOfMatchObject.attributeCompared
+		);
 		setTimeout(() => {
 			let cardsRelated = [];
 			cardsRelated = winnerOfMatchObject.cardsToReceive;
-			console.log("USE GAME -> card match IS COMPARING FALSE");
-			room.updateRoomIsComparingCards(false);
+			room.updateRoomIsComparingCards(false, "");
 			players.removeFirstCardFromDeck(
 				room.room.id,
 				winnerOfMatchObject.winnerPlayerId
@@ -135,7 +138,7 @@ export function useGame() {
 			if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
 				room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
 			}
-		}, 10000);
+		}, 5000);
 	}
 
 	function compareCards(attributeIndex: number) {
@@ -146,6 +149,7 @@ export function useGame() {
 			cardsToReceive: [] as Card[],
 			winnerPlayerId: "",
 			loserPlayerId: "",
+			attributeCompared: firstCardPlayerOne.attributes[attributeIndex].name,
 		};
 		if (firstCardPlayerOne.isSuperTrunfo) {
 			combatObjectResponse.cardsToReceive.push(

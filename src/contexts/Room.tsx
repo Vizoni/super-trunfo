@@ -17,7 +17,12 @@ type Room = {
 	turn: string;
 	deck: Card[];
 	winnerPlayerId: string;
+	cardsComparison: cardsComparison;
+};
+
+type cardsComparison = {
 	isComparingCards: boolean;
+	attributeBeingCompared: string;
 };
 
 type RoomContextType = {
@@ -30,7 +35,10 @@ type RoomContextType = {
 	updateGameTurn: (roomId: string, nextPlayerId: string) => void;
 	updatePlayerDeck: (playerId: string, cards: Card[]) => void;
 	updateRoomWithWinnerPlayer: (winnerPlayerId: string) => void;
-	updateRoomIsComparingCards: (isComparingCards: boolean) => void;
+	updateRoomIsComparingCards: (
+		isComparingCards: boolean,
+		attributeBeingCompared: string
+	) => void;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -45,7 +53,10 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		turn: "",
 		deck: [],
 		winnerPlayerId: "",
-		isComparingCards: false,
+		cardsComparison: {
+			isComparingCards: false,
+			attributeBeingCompared: "",
+		},
 	});
 
 	async function updateRoom(key: any) {
@@ -97,10 +108,16 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 			.update({ winnerPlayerId: winnerPlayerId });
 	}
 
-	async function updateRoomIsComparingCards(isComparingCards: boolean) {
-		await database
-			.ref(`rooms/${room.id}`)
-			.update({ isComparingCards: isComparingCards });
+	async function updateRoomIsComparingCards(
+		isComparingCards: boolean,
+		attributeBeingCompared: string
+	) {
+		await database.ref(`rooms/${room.id}`).update({
+			cardsComparison: {
+				isComparingCards: isComparingCards,
+				attributeBeingCompared: attributeBeingCompared,
+			},
+		});
 	}
 
 	return (

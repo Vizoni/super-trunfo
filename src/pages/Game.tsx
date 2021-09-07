@@ -9,15 +9,15 @@ export function Game() {
 	function canDisplayCard(player: any) {
 		if (playerHasAtLeastOneCardOnDeck(player)) {
 			if (isCurrentUserCard(player)) {
-				console.log("A - true");
 				return true;
 			}
-			if (!isCurrentUserCard(player) && room.room.isComparingCards) {
-				console.log("B - true");
+			if (
+				!isCurrentUserCard(player) &&
+				room.room.cardsComparison.isComparingCards
+			) {
 				return true;
 			}
 		}
-		console.log("C - false");
 		return false;
 	}
 
