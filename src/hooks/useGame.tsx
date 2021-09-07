@@ -118,27 +118,27 @@ export function useGame() {
 			true,
 			winnerOfMatchObject.attributeCompared
 		);
-		setTimeout(() => {
-			let cardsRelated = [];
-			cardsRelated = winnerOfMatchObject.cardsToReceive;
-			room.updateRoomIsComparingCards(false, "");
-			players.removeFirstCardFromDeck(
-				room.room.id,
-				winnerOfMatchObject.winnerPlayerId
-			);
-			players.addCardsToDeck(
-				room.room.id,
-				winnerOfMatchObject.winnerPlayerId,
-				cardsRelated
-			);
-			players.removeFirstCardFromDeck(
-				room.room.id,
-				winnerOfMatchObject.loserPlayerId
-			);
-			if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
-				room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
-			}
-		}, 5000);
+		// setTimeout(() => {
+		// 	let cardsRelated = [];
+		// 	cardsRelated = winnerOfMatchObject.cardsToReceive;
+		// 	room.updateRoomIsComparingCards(false, "");
+		// 	players.removeFirstCardFromDeck(
+		// 		room.room.id,
+		// 		winnerOfMatchObject.winnerPlayerId
+		// 	);
+		// 	players.addCardsToDeck(
+		// 		room.room.id,
+		// 		winnerOfMatchObject.winnerPlayerId,
+		// 		cardsRelated
+		// 	);
+		// 	players.removeFirstCardFromDeck(
+		// 		room.room.id,
+		// 		winnerOfMatchObject.loserPlayerId
+		// 	);
+		// 	if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
+		// 		room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
+		// 	}
+		// }, 5000);
 	}
 
 	function compareCards(attributeIndex: number) {
