@@ -94,7 +94,28 @@ img {
 	cursor: pointer;
 }
 
-/* se o item da lista nao for o ultimo, põe borda em baixo */
-.attribute-item:not(:last-child) {
+/* se o item da lista nao for o ultimo e nem estiver sendo o atributo comparado, põe borda em baixo */
+.attribute-item:not(:last-child):not(.high-light-attribute) {
 	border-bottom: 1px solid #000;
+}
+
+.blur {
+	filter: blur(3px);
+}
+
+.opacity {
+	opacity: 0.2;
+}
+
+.high-light-attribute {
+	border: 3px solid #ce3f3f;
+	padding: 0px 10px;
+	animation: blink 1s;
+	animation-iteration-count: 10;
+}
+
+@keyframes blink {
+	50% {
+		border-color: transparent;
+	}
 }

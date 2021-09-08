@@ -2,7 +2,7 @@ import { useGame } from "../hooks/useGame";
 import "./cardStyle.css";
 
 export function CardComponent(props: any) {
-	const { isCurrentUserTurn, cardMatch } = useGame();
+	const { isCurrentUserTurn, cardMatch, room } = useGame();
 
 	function handleClick(cardIndexInCurrentUserDeck: any) {
 		if (!isCurrentUserTurn()) {
@@ -15,6 +15,20 @@ export function CardComponent(props: any) {
 		if (isSuperTrunfo) {
 			return "SUPER-TRUNFO";
 		}
+	}
+
+	function isCurrentAttributeBeingCompared(attributeName: string) {
+		console.log(
+			"comparando",
+			room.room.cardsComparison.isComparingCards,
+			room.room.cardsComparison.attributeBeingCompared,
+			attributeName
+		);
+		if (room.room.cardsComparison.attributeBeingCompared == attributeName) {
+			console.log("É TRUE");
+			return true;
+		}
+		return false;
 	}
 
 	return (
@@ -36,12 +50,29 @@ export function CardComponent(props: any) {
 							return (
 								<div
 									onClick={() => handleClick(index)}
-									className="attribute-item"
+									className={`attribute-item ${
+										room.room.cardsComparison.isComparingCards &&
+										!isCurrentAttributeBeingCompared(attribute.name)
+											? `opacity`
+											: ``
+									}${
+										room.room.cardsComparison.isComparingCards &&
+										isCurrentAttributeBeingCompared(attribute.name)
+											? `high-light-attribute`
+											: ``
+									}`}
 								>
 									<div>
 										<h2>{attribute.name}</h2>
 									</div>
-									<div>
+									<div
+										className={
+											room.room.cardsComparison.isComparingCards &&
+											!isCurrentAttributeBeingCompared(attribute.name)
+												? `blur`
+												: ``
+										}
+									>
 										<h2>{attribute.value}</h2>
 									</div>
 								</div>
