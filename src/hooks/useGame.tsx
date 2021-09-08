@@ -52,6 +52,7 @@ export function useGame() {
 			cardsComparison: {
 				isComparingCards: false,
 				attributeBeingCompared: "",
+				winnerCardName: "",
 			},
 		};
 		const roomId = await room.createRoom(newRoom);
@@ -116,29 +117,30 @@ export function useGame() {
 		const winnerOfMatchObject = compareCards(attributeIndex);
 		room.updateRoomIsComparingCards(
 			true,
-			winnerOfMatchObject.attributeCompared
+			winnerOfMatchObject.attributeCompared,
+			winnerOfMatchObject.cardsToReceive[1].name
 		);
-		setTimeout(() => {
-			let cardsRelated = [];
-			cardsRelated = winnerOfMatchObject.cardsToReceive;
-			room.updateRoomIsComparingCards(false, "");
-			players.removeFirstCardFromDeck(
-				room.room.id,
-				winnerOfMatchObject.winnerPlayerId
-			);
-			players.addCardsToDeck(
-				room.room.id,
-				winnerOfMatchObject.winnerPlayerId,
-				cardsRelated
-			);
-			players.removeFirstCardFromDeck(
-				room.room.id,
-				winnerOfMatchObject.loserPlayerId
-			);
-			if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
-				room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
-			}
-		}, 5000);
+		// setTimeout(() => {
+		// 	let cardsRelated = [];
+		// 	cardsRelated = winnerOfMatchObject.cardsToReceive;
+		// 	room.updateRoomIsComparingCards(false, "", "");
+		// 	players.removeFirstCardFromDeck(
+		// 		room.room.id,
+		// 		winnerOfMatchObject.winnerPlayerId
+		// 	);
+		// 	players.addCardsToDeck(
+		// 		room.room.id,
+		// 		winnerOfMatchObject.winnerPlayerId,
+		// 		cardsRelated
+		// 	);
+		// 	players.removeFirstCardFromDeck(
+		// 		room.room.id,
+		// 		winnerOfMatchObject.loserPlayerId
+		// 	);
+		// 	if (winnerOfMatchObject.winnerPlayerId !== room.room.turn) {
+		// 		room.updateGameTurn(room.room.id, winnerOfMatchObject.winnerPlayerId);
+		// 	}
+		// }, 5000);
 	}
 
 	function compareCards(attributeIndex: number) {

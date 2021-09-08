@@ -10,3 +10,44 @@ body {
 	justify-content: space-between;
 	/* align-items: stretch; */
 }
+
+.player-side {
+	width: 50%;
+	height: 100%;
+}
+
+.winner-card-label {
+	text-align: center;
+	font-family: monospace;
+	font-weight: 800;
+	font-size: 3em;
+	color: #ce3f3f;
+	animation: blinkText 0.5s;
+	animation-iteration-count: infinite;
+	text-transform: uppercase;
+}
+
+@keyframes blinkText {
+	50% {
+		color: transparent;
+	}
+}
+
+.flex-container {
+	/* width: 80%; */
+	/* width: 50%; */
+	min-height: 300px;
+	/* margin: 0 auto; */
+	display: -webkit-flex; /* Safari */
+	display: flex; /* Standard syntax */
+}
+.flex-container .column {
+	padding: 10px;
+	background: #dbdfe5;
+	-webkit-flex: 1; /* Safari */
+	-ms-flex: 1; /* IE 10 */
+	flex: 1; /* Standard syntax */
+}
+.flex-container .column.bg-alt {
+	background: #b4bac0;
+}

@@ -23,6 +23,7 @@ type Room = {
 type cardsComparison = {
 	isComparingCards: boolean;
 	attributeBeingCompared: string;
+	winnerCardName: string;
 };
 
 type RoomContextType = {
@@ -37,7 +38,8 @@ type RoomContextType = {
 	updateRoomWithWinnerPlayer: (winnerPlayerId: string) => void;
 	updateRoomIsComparingCards: (
 		isComparingCards: boolean,
-		attributeBeingCompared: string
+		attributeBeingCompared: string,
+		winnerCardName: string
 	) => void;
 };
 
@@ -56,6 +58,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		cardsComparison: {
 			isComparingCards: false,
 			attributeBeingCompared: "",
+			winnerCardName: "",
 		},
 	});
 
@@ -110,12 +113,14 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 
 	async function updateRoomIsComparingCards(
 		isComparingCards: boolean,
-		attributeBeingCompared: string
+		attributeBeingCompared: string,
+		winnerCardName: string
 	) {
 		await database.ref(`rooms/${room.id}`).update({
 			cardsComparison: {
 				isComparingCards: isComparingCards,
 				attributeBeingCompared: attributeBeingCompared,
+				winnerCardName: winnerCardName,
 			},
 		});
 	}

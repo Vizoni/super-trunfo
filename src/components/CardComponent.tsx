@@ -11,21 +11,8 @@ export function CardComponent(props: any) {
 		cardMatch(cardIndexInCurrentUserDeck);
 	}
 
-	function displaySuperTrunfoBadgeLabel(isSuperTrunfo: boolean) {
-		if (isSuperTrunfo) {
-			return "SUPER-TRUNFO";
-		}
-	}
-
 	function isCurrentAttributeBeingCompared(attributeName: string) {
-		console.log(
-			"comparando",
-			room.room.cardsComparison.isComparingCards,
-			room.room.cardsComparison.attributeBeingCompared,
-			attributeName
-		);
 		if (room.room.cardsComparison.attributeBeingCompared == attributeName) {
-			console.log("É TRUE");
 			return true;
 		}
 		return false;
@@ -39,7 +26,7 @@ export function CardComponent(props: any) {
 						<h2 className="car-name">{props.currentCard.name}</h2>
 						{props.currentCard.isSuperTrunfo && (
 							<h2 className="super-trunfo">
-								{displaySuperTrunfoBadgeLabel(props.currentCard.isSuperTrunfo)}
+								{props.currentCard.isSuperTrunfo ? "SUPER TRUNFO" : ""}
 							</h2>
 						)}
 						<h2 className="type">{props.currentCard.type}</h2>
