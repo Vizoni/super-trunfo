@@ -1,4 +1,5 @@
 import { useGame } from "../hooks/useGame";
+import { Card } from "../interfaces/Card";
 import "./cardStyle.css";
 
 export function CardComponent(props: any) {
@@ -11,17 +12,24 @@ export function CardComponent(props: any) {
 		cardMatch(cardIndexInCurrentUserDeck);
 	}
 
-	function isCurrentAttributeBeingCompared(attributeName: string) {
-		if (room.room.cardsComparison.attributeBeingCompared == attributeName) {
-			return true;
-		}
-		return false;
+	function isCurrentAttributeBeingCompared(currentCardAttributeName: string) {
+		const attributeBeingCompared =
+			room.room.cardsComparison.attributeBeingCompared;
+		return attributeBeingCompared == currentCardAttributeName ? true : false;
+	}
+
+	function isCardWinner(card: Card) {
+		return card.name == room.room.cardsComparison.winnerCardName ? true : false;
 	}
 
 	return (
 		<>
 			{props.display && (
-				<div className="card">
+				<div
+					className={`card ${
+						isCardWinner(props.currentCard) ? `winner-card` : ``
+					}`}
+				>
 					<div className="header">
 						<h2 className="car-name">{props.currentCard.name}</h2>
 						{props.currentCard.isSuperTrunfo && (
@@ -47,7 +55,7 @@ export function CardComponent(props: any) {
 										isCurrentAttributeBeingCompared(attribute.name)
 											? `high-light-attribute`
 											: ``
-									}`}
+									}${isCurrentUserTurn() ? `clickable` : ``}`}
 								>
 									<div>
 										<h2>{attribute.name}</h2>

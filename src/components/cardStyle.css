@@ -8,6 +8,28 @@
 	margin: 2% 5%;
 }
 
+.winner-card {
+	-webkit-animation: bounce 0.5s infinite alternate;
+	-moz-animation: bounce 0.5s infinite alternate;
+	animation: bounce 0.5s infinite alternate;
+}
+
+@-webkit-keyframes bounce {
+	to {
+		-webkit-transform: scale(1.1);
+	}
+}
+@-moz-keyframes bounce {
+	to {
+		-moz-transform: scale(1.1);
+	}
+}
+@keyframes bounce {
+	to {
+		transform: scale(1.1);
+	}
+}
+
 .show-card-info {
 	color: rgb(240, 114, 56);
 }
@@ -91,6 +113,9 @@ img {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+}
+
+.clickable {
 	cursor: pointer;
 }
 
