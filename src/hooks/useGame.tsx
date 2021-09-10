@@ -187,6 +187,11 @@ export function useGame() {
 		}
 		return combatObjectResponse;
 	}
+
+	function userLeaveGame() {
+		room.removeUser(currentUser.currentUser);
+	}
+
 	return {
 		currentUser,
 		players,
@@ -199,5 +204,6 @@ export function useGame() {
 		startListenToAllContexts,
 		isCurrentUserTurn,
 		cardMatch,
+		userLeaveGame,
 	};
 }

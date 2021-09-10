@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Card } from "../interfaces/Card";
 import { Player } from "../interfaces/Player";
 import { database } from "../services/firebase";
+import { shuffle } from "../utils/shuffle";
 
 type RoomContextProviderProps = {
 	children: ReactNode;
@@ -41,6 +42,7 @@ type RoomContextType = {
 		attributeBeingCompared: string,
 		winnerCardName: string
 	) => void;
+	removeUser: (user: Player) => void;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -125,6 +127,20 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		});
 	}
 
+	async function removeUser(user: Player) {
+		/* pra remover o usuário tem que pegar as cartas dele e devolver pro deck do game, remover o usuário e depois atualizar o contador de players */
+		const currentUserDeckFromDatabase = await (
+			await database.ref(`rooms/${room.id}/players/${user.id}/deck`).get()
+		).val();
+		const finalDeck = currentUserDeckFromDatabase.concat(room.deck);
+		const updateRoomWithDefaultValues = {
+			deck: shuffle(finalDeck),
+			playersCounter: Object.keys(room.players).length,
+		};
+		await database.ref(`rooms/${room.id}`).update(updateRoomWithDefaultValues);
+		await database.ref(`rooms/${room.id}/players/${user.id}`).remove();
+	}
+
 	return (
 		<RoomContext.Provider
 			value={{
@@ -138,6 +154,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				updatePlayerDeck,
 				updateRoomWithWinnerPlayer,
 				updateRoomIsComparingCards,
+				removeUser,
 			}}
 		>
 			{children}
