@@ -29,23 +29,21 @@ export function Game() {
 		return player.deck.length > 0 ? true : false;
 	}
 
-	function isWaitingSecondPlayer() {
-		return room.room.playersCounter < 2 ? true : false;
+	function gameIsOverAndHasAWinner() {
+		return room.room.winnerPlayerId ? true : false;
 	}
 
 	return (
 		<>
-			{isWaitingSecondPlayer() && (
-				<div>
-					<h4>Aguardando segundo jogador...</h4>
-				</div>
-			)}
-
-			{!room.room.winnerPlayerId && (
+			{!gameIsOverAndHasAWinner() && (
 				<div>
 					<HUDComponent />
 
-					<div className="flex-container">
+					<div
+						className={`flex-container ${
+							room.isWaitingSecondPlayer() ? `waiting-player` : ``
+						}`}
+					>
 						{players.players.map((player, index) => {
 							if (player.deck) {
 								return (
@@ -54,6 +52,7 @@ export function Game() {
 											key={index}
 											currentCard={player.deck[0]}
 											display={canDisplayCard(player)}
+											// className={`${isWaitingSecondPlayer() ? `` : ``}`}
 										></CardComponent>
 									</>
 								);

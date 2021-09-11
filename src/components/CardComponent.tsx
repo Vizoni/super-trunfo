@@ -39,13 +39,18 @@ export function CardComponent(props: any) {
 						)}
 						<h2 className="type">{props.currentCard.type}</h2>
 					</div>
-					<img className="card-image" src={props.currentCard.image}></img>
+					<div className="image-box">
+						<img className="card-image" src={props.currentCard.image}></img>
+					</div>
 					<div className="attribute-list">
 						{props.currentCard.attributes.map((attribute: any, index: any) => {
 							return (
 								<div
 									onClick={() => handleClick(index)}
 									className={`attribute-item ${
+										isCurrentUserTurn() ? `clickable` : ``
+									}
+									${
 										room.room.cardsComparison.isComparingCards &&
 										!isCurrentAttributeBeingCompared(attribute.name)
 											? `opacity`
@@ -55,7 +60,7 @@ export function CardComponent(props: any) {
 										isCurrentAttributeBeingCompared(attribute.name)
 											? `high-light-attribute`
 											: ``
-									}${isCurrentUserTurn() ? `clickable` : ``}`}
+									}`}
 								>
 									<div>
 										<h2>{attribute.name}</h2>
@@ -78,7 +83,7 @@ export function CardComponent(props: any) {
 			)}
 			{!props.display && (
 				<div className="card hide-all">
-					<div>
+					<div className="">
 						<h1 className="hided-card-logo">Super Trunfo</h1>
 						<h2 className="deck-theme-name">Carros</h2>
 					</div>

@@ -3,9 +3,10 @@
 	border-radius: 5%;
 	background-color: #f5eb9061;
 	padding: 15px;
-	font-family: monospace;
 	flex: 1;
 	margin: 2% 5%;
+	text-transform: uppercase;
+	max-width: 50vh;
 }
 
 .winner-card {
@@ -35,22 +36,25 @@
 }
 
 .type {
-	border: 3px solid #000000;
+	border: 0.2rem solid #000000;
 	border-radius: 50%;
 	background-color: rgb(240, 237, 52);
-	width: 4%;
-	height: 5%;
+	width: 3vh;
+	height: 3vh;
 	text-align: center;
-	padding: 1%;
+	padding: 0.5rem;
+	font-size: 1.5rem;
 }
 
 .header {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	padding: 0px 10px;
+	padding: 0 1em;
 	align-items: center;
-	text-transform: uppercase;
+	height: 5vh;
+	font-size: 0.5em;
+	margin: 0.5rem;
 }
 
 .car-name {
@@ -68,45 +72,52 @@
 
 .hide-all {
 	border: rgb(63, 211, 166) 3px solid;
-	line-height: 100px;
+	line-height: 10vh;
 	vertical-align: middle;
 	text-align: center;
 	text-transform: uppercase;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	color: #c3bb82;
 }
 
 .hided-card-logo {
-	font-size: 7em;
+	font-size: 8rem;
 }
 
 .hided-card-h4 {
-	font-size: 1em;
+	font-size: 2rem;
 }
 
 .deck-theme-name {
-	font-size: 2em;
+	font-size: 3rem;
+}
+
+.image-box {
+	display: flex;
+	justify-content: center;
 }
 
 .card-image {
 	/* max-width: 95%; */
-	width: 95%;
-	height: auto;
-	margin: 5px 10px;
+	width: 100%;
+	height: 35vh;
+	margin: 0 0.5rem;
 	display: block;
-	border: 1px solid #000;
+	/* border: 1px solid #000; */
 	border-radius: 3%;
 }
 
 .attribute-list {
 	/* display: flex;
 	flex-direction: column; */
-	margin: 30px 10px;
-	padding: 10px;
+	height: 30vh;
+	margin: 1rem 0.5rem;
+	padding: 0.5rem;
 	background-color: rgb(240, 237, 52);
-	border: 3px solid #000;
-	border-radius: 5%;
+	border: 0.2rem solid #000;
+	border-radius: 2%;
 }
 
 .attribute-item {
@@ -143,4 +154,8 @@
 	50% {
 		border-color: transparent;
 	}
+}
+
+.waiting-player {
+	width: 50%;
 }

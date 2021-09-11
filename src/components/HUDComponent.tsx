@@ -5,7 +5,12 @@ export function HUDComponent() {
 
 	return (
 		<>
-			<div>
+			<div className="hud-container">
+				{room.isWaitingSecondPlayer() && (
+					<div>
+						<h4>Aguardando segundo jogador...</h4>
+					</div>
+				)}
 				{isCurrentUserTurn() ? (
 					<h2>SUA VEZ!!</h2>
 				) : (
