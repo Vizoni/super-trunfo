@@ -39,7 +39,7 @@ export function CardComponent(props: any) {
 						)}
 						<h2 className="type">{props.currentCard.type}</h2>
 					</div>
-					<img src={props.currentCard.image}></img>
+					<img className="card-image" src={props.currentCard.image}></img>
 					<div className="attribute-list">
 						{props.currentCard.attributes.map((attribute: any, index: any) => {
 							return (

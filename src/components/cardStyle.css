@@ -89,7 +89,7 @@
 	font-size: 2em;
 }
 
-img {
+.card-image {
 	/* max-width: 95%; */
 	width: 95%;
 	height: auto;

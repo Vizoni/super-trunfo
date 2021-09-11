@@ -39,18 +39,37 @@ export function Home() {
 	}
 
 	return (
-		<div>
-			<form onSubmit={handleLogin}>
-				<input
-					type="text"
-					placeholder="Código da sala"
-					value={roomId}
-					onChange={(event) => setRoomId(event.target.value)}
+		<form onSubmit={handleLogin}>
+			<div className="home-page">
+				<img
+					src="../super-trunfo.png"
+					className="logo"
+					alt="Logo Super Trunfo"
 				/>
-				<button type="submit">Entrar na sala</button>
-				<p>ou</p>
-				<button onClick={handleCreateRoom}>Criar Sala</button>
-			</form>
-		</div>
+				<div className="join-room">
+					<input
+						className="font-join input-join"
+						type="text"
+						placeholder="Insira o código da sala"
+						value={roomId}
+						onChange={(event) => setRoomId(event.target.value)}
+					/>
+					<button className="font-join btn-join-room" type="submit">
+						Entrar
+					</button>
+					<div className="or-divider">
+						<span>ou</span>
+					</div>
+					<div className="create-room">
+						<button
+							className="btn-create-room font-join"
+							onClick={handleCreateRoom}
+						>
+							Criar Sala
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
 	);
 }

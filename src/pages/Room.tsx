@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useGame } from "../hooks/useGame";
 import { Game } from "./Game";
-// import useUserExit from "../hooks/useUserExit";
 
 export function Room() {
 	const { buyCardsForGameStart, userLeaveGame } = useGame();
