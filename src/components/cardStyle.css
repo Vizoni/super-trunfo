@@ -1,12 +1,13 @@
 .card {
 	border: #39373a 3px solid;
 	border-radius: 5%;
-	background-color: #f5eb9061;
+	background-color: #fdfdcb;
 	padding: 15px;
 	flex: 1;
 	margin: 2% 5%;
-	text-transform: uppercase;
 	max-width: 50vh;
+	text-transform: uppercase;
+	/* perspective: 1000px; */
 }
 
 .winner-card {
@@ -72,7 +73,7 @@
 
 .hide-all {
 	border: rgb(63, 211, 166) 3px solid;
-	line-height: 10vh;
+	line-height: 12vh;
 	vertical-align: middle;
 	text-align: center;
 	text-transform: uppercase;
@@ -158,4 +159,58 @@
 
 .waiting-player {
 	width: 50%;
+}
+
+/* ==================== FLIP CARD */
+
+.flip-card {
+	/* padding: 15px;
+	flex: 1;
+	margin: 2% 5%;
+	max-width: 50vh; */
+
+	/* background-color: transparent;
+	width: 300px;
+	height: 300px; */
+	flex: 1;
+	perspective: 1000px;
+}
+
+.flip-card-inner {
+	position: relative;
+	/* width: 100%;
+	height: 100%; */
+	text-align: center;
+	transition: transform 5s;
+	transform-style: preserve-3d;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* .flip-card:hover .flip-card-inner {
+	transform: rotateY(180deg);
+} */
+
+.flip-card-front,
+.flip-card-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+.flip-card-front {
+	/* background-color: #bbb;
+	color: black; */
+}
+
+.flip-card-back {
+	transform: rotateY(180deg);
+}
+
+.flip {
+	transition: transform 2s;
+	transform-style: preserve-3d;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	transform: rotateY(180deg);
 }
