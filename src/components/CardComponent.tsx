@@ -9,14 +9,10 @@ export function CardComponent(props: any) {
 	const [doFlipAnimation, setDoFlipAnimation] = useState(false);
 
 	function handleClick(cardIndexInCurrentUserDeck: any) {
-		setDoFlipAnimation(true);
 		if (!isCurrentUserTurn()) {
 			return;
 		}
 		cardMatch(cardIndexInCurrentUserDeck);
-		setTimeout(() => {
-			setDoFlipAnimation(false);
-		}, 5000);
 	}
 
 	function isCurrentAttributeBeingCompared(currentCardAttributeName: string) {
@@ -35,14 +31,14 @@ export function CardComponent(props: any) {
 
 	return (
 		<>
-			<div className={`flip-container ${doFlipAnimation ? "do-flip" : ""}`}>
+			<div
+				className={`flip-container ${doFlipAnimation ? "do-flip" : ""} ${
+					isCardWinner(props.currentCard) ? `winner-card` : ``
+				}`}
+			>
 				<div className="flipper">
 					<div className="front">
-						<div
-							className={`card ${
-								isCardWinner(props.currentCard) ? `winner-card` : ``
-							}`}
-						>
+						<div className={`card`}>
 							<div className="header">
 								<h2 className="car-name">{props.currentCard.name}</h2>
 								{props.currentCard.isSuperTrunfo && (
