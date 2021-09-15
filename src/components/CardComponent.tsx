@@ -21,6 +21,16 @@ export function CardComponent(props: any) {
 		return attributeBeingCompared == currentCardAttributeName ? true : false;
 	}
 
+	function highLightCardTypeAAgainstSuperTrunfo(card: Card) {
+		if (
+			room.room.cardsComparison.isComparingSuperTrunfoAgainstCardTypeA &&
+			card.type == "A"
+		) {
+			return true;
+		}
+		return false;
+	}
+
 	function isCardWinner(card: Card) {
 		return card.name == room.room.cardsComparison.winnerCardName ? true : false;
 	}
@@ -46,12 +56,28 @@ export function CardComponent(props: any) {
 										{props.currentCard.isSuperTrunfo ? "SUPER TRUNFO" : ""}
 									</h2>
 								)}
-								<h2 className="type">{props.currentCard.type}</h2>
+								<h2
+									className={`type ${
+										highLightCardTypeAAgainstSuperTrunfo(props.currentCard)
+											? `high-light-type animation-blink`
+											: ""
+									}`}
+								>
+									{props.currentCard.type}
+								</h2>
 							</div>
 							<div className="image-box">
 								<img className="card-image" src={props.currentCard.image}></img>
 							</div>
-							<div className="attribute-list">
+							{/* <div className="attribute-list"> */}
+							<div
+								className={`attribute-list ${
+									room.room.cardsComparison
+										.isComparingSuperTrunfoAgainstCardTypeA
+										? `blur`
+										: ""
+								}`}
+							>
 								{props.currentCard.attributes.map(
 									(attribute: any, index: any) => {
 										return (
@@ -61,14 +87,18 @@ export function CardComponent(props: any) {
 													isCurrentUserTurn() ? `clickable` : ``
 												}
 									${
-										room.room.cardsComparison.isComparingCards &&
-										!isCurrentAttributeBeingCompared(attribute.name)
+										(room.room.cardsComparison.isComparingCards &&
+											!isCurrentAttributeBeingCompared(attribute.name)) ||
+										room.room.cardsComparison
+											.isComparingSuperTrunfoAgainstCardTypeA
 											? `opacity`
 											: ``
 									}${
 													room.room.cardsComparison.isComparingCards &&
-													isCurrentAttributeBeingCompared(attribute.name)
-														? `high-light-attribute`
+													isCurrentAttributeBeingCompared(attribute.name) &&
+													!room.room.cardsComparison
+														.isComparingSuperTrunfoAgainstCardTypeA
+														? `high-light-attribute animation-blink`
 														: ``
 												}`}
 											>
@@ -77,8 +107,12 @@ export function CardComponent(props: any) {
 												</div>
 												<div
 													className={
-														room.room.cardsComparison.isComparingCards &&
-														!isCurrentAttributeBeingCompared(attribute.name)
+														(room.room.cardsComparison.isComparingCards &&
+															!isCurrentAttributeBeingCompared(
+																attribute.name
+															)) ||
+														room.room.cardsComparison
+															.isComparingSuperTrunfoAgainstCardTypeA
 															? `blur`
 															: ``
 													}

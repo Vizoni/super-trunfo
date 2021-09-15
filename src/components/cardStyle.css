@@ -69,6 +69,7 @@
 	padding: 6px;
 	color: white;
 	border-radius: 10px;
+	animation: bounce 0.5s infinite alternate;
 }
 
 .hide-all {
@@ -147,8 +148,8 @@
 .high-light-attribute {
 	border: 3px solid #ce3f3f;
 	padding: 0px 10px;
-	animation: blink 1s;
-	animation-iteration-count: infinite;
+	/* animation: blink 1s;
+	animation-iteration-count: infinite; */
 }
 
 @keyframes blink {
@@ -161,51 +162,17 @@
 	width: 50%;
 }
 
-/* ==================== FLIP CARD */
-
-/* .flip-card {
-	flex: 1;
-	perspective: 1000px;
+.high-light-type {
+	border: 0.3rem solid #ce3f3f;
+	padding: 0.8rem;
+	font-size: 2rem;
 }
 
-.flip-card-inner {
-	position: relative;
-	text-align: center;
-	transition: transform 5s;
-	transform-style: preserve-3d;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+.animation-blink {
+	animation: blink 1s;
+	animation-iteration-count: infinite;
 }
 
-.flip-card-front,
-.flip-card-back {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	-webkit-backface-visibility: hidden;
-	backface-visibility: hidden;
-}
-
-.flip-card-back {
-	transform: rotateY(180deg);
-}
-
-.flip {
-	transition: transform 2s;
-	transform-style: preserve-3d;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-	transform: rotateY(180deg);
-} */
-
-.a {
-	background-color: #ce3f3f;
-	width: 200px;
-	height: 200px;
-}
-.b {
-	background-color: #668eb3;
-	width: 200px;
-	height: 200px;
-}
 /* ==================== FLIP CARD 2 */
 .flip-container {
 	display: flex;

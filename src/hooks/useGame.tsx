@@ -53,6 +53,7 @@ export function useGame() {
 				isComparingCards: false,
 				attributeBeingCompared: "",
 				winnerCardName: "",
+				isComparingSuperTrunfoAgainstCardTypeA: false,
 			},
 		};
 		const roomId = await room.createRoom(newRoom);
@@ -118,12 +119,13 @@ export function useGame() {
 		room.updateRoomIsComparingCards(
 			true,
 			winnerOfMatchObject.attributeCompared,
-			winnerOfMatchObject.cardsToReceive[1].name
+			winnerOfMatchObject.cardsToReceive[1].name,
+			winnerOfMatchObject.isComparingSuperTrunfoAgainstCardTypeA
 		);
 		setTimeout(() => {
 			let cardsRelated = [];
 			cardsRelated = winnerOfMatchObject.cardsToReceive;
-			room.updateRoomIsComparingCards(false, "", "");
+			room.updateRoomIsComparingCards(false, "", "", false);
 			players.removeFirstCardFromDeck(
 				room.room.id,
 				winnerOfMatchObject.winnerPlayerId
@@ -145,28 +147,57 @@ export function useGame() {
 
 	function compareCards(attributeIndex: number) {
 		const arrayOfFirstCards = getFirstCardOfBothPlayers();
-		let firstCardPlayerOne = arrayOfFirstCards[0];
-		let firstCardPlayerTwo = arrayOfFirstCards[1];
+		const firstCardPlayerOne = arrayOfFirstCards[0] as Card;
+		const firstCardPlayerTwo = arrayOfFirstCards[1] as Card;
+		const player1 = players.players[0] as Player;
+		const player2 = players.players[1] as Player;
 		let combatObjectResponse = {
 			cardsToReceive: [] as Card[],
 			winnerPlayerId: "",
 			loserPlayerId: "",
 			attributeCompared: firstCardPlayerOne.attributes[attributeIndex].name,
+			isComparingSuperTrunfoAgainstCardTypeA: false,
 		};
-		if (firstCardPlayerOne.isSuperTrunfo) {
+
+		if (firstCardPlayerOne.isSuperTrunfo && firstCardPlayerTwo.type != "A") {
 			combatObjectResponse.cardsToReceive.push(
 				firstCardPlayerTwo,
 				firstCardPlayerOne
 			);
-			combatObjectResponse.winnerPlayerId = players.players[0].id;
-			combatObjectResponse.loserPlayerId = players.players[1].id;
-		} else if (firstCardPlayerTwo.isSuperTrunfo) {
+			combatObjectResponse.winnerPlayerId = player1.id;
+			combatObjectResponse.loserPlayerId = player2.id;
+		} else if (
+			firstCardPlayerOne.isSuperTrunfo &&
+			firstCardPlayerTwo.type == "A"
+		) {
 			combatObjectResponse.cardsToReceive.push(
 				firstCardPlayerOne,
 				firstCardPlayerTwo
 			);
-			combatObjectResponse.winnerPlayerId = players.players[1].id;
-			combatObjectResponse.loserPlayerId = players.players[0].id;
+			combatObjectResponse.winnerPlayerId = player2.id;
+			combatObjectResponse.loserPlayerId = player1.id;
+			combatObjectResponse.isComparingSuperTrunfoAgainstCardTypeA = true;
+		} else if (
+			firstCardPlayerTwo.isSuperTrunfo &&
+			firstCardPlayerOne.type != "A"
+		) {
+			combatObjectResponse.cardsToReceive.push(
+				firstCardPlayerOne,
+				firstCardPlayerTwo
+			);
+			combatObjectResponse.winnerPlayerId = player2.id;
+			combatObjectResponse.loserPlayerId = player1.id;
+		} else if (
+			firstCardPlayerTwo.isSuperTrunfo &&
+			firstCardPlayerOne.type == "A"
+		) {
+			combatObjectResponse.cardsToReceive.push(
+				firstCardPlayerTwo,
+				firstCardPlayerOne
+			);
+			combatObjectResponse.winnerPlayerId = player1.id;
+			combatObjectResponse.loserPlayerId = player2.id;
+			combatObjectResponse.isComparingSuperTrunfoAgainstCardTypeA = true;
 		} else if (
 			firstCardPlayerOne.attributes[attributeIndex].value >
 			firstCardPlayerTwo.attributes[attributeIndex].value
@@ -175,15 +206,15 @@ export function useGame() {
 				firstCardPlayerTwo,
 				firstCardPlayerOne
 			);
-			combatObjectResponse.winnerPlayerId = players.players[0].id;
-			combatObjectResponse.loserPlayerId = players.players[1].id;
+			combatObjectResponse.winnerPlayerId = player1.id;
+			combatObjectResponse.loserPlayerId = player2.id;
 		} else {
 			combatObjectResponse.cardsToReceive.push(
 				firstCardPlayerOne,
 				firstCardPlayerTwo
 			);
-			combatObjectResponse.winnerPlayerId = players.players[1].id;
-			combatObjectResponse.loserPlayerId = players.players[0].id;
+			combatObjectResponse.winnerPlayerId = player2.id;
+			combatObjectResponse.loserPlayerId = player1.id;
 		}
 		return combatObjectResponse;
 	}

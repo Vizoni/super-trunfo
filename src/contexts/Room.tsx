@@ -25,6 +25,7 @@ type cardsComparison = {
 	isComparingCards: boolean;
 	attributeBeingCompared: string;
 	winnerCardName: string;
+	isComparingSuperTrunfoAgainstCardTypeA: boolean;
 };
 
 type RoomContextType = {
@@ -40,7 +41,8 @@ type RoomContextType = {
 	updateRoomIsComparingCards: (
 		isComparingCards: boolean,
 		attributeBeingCompared: string,
-		winnerCardName: string
+		winnerCardName: string,
+		isComparingSuperTrunfoAgainstCardTypeA: boolean
 	) => void;
 	removeUser: (user: Player) => void;
 	isWaitingSecondPlayer: () => boolean;
@@ -62,6 +64,7 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 			isComparingCards: false,
 			attributeBeingCompared: "",
 			winnerCardName: "",
+			isComparingSuperTrunfoAgainstCardTypeA: false,
 		},
 	});
 
@@ -117,13 +120,16 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 	async function updateRoomIsComparingCards(
 		isComparingCards: boolean,
 		attributeBeingCompared: string,
-		winnerCardName: string
+		winnerCardName: string,
+		isComparingSuperTrunfoAgainstCardTypeA: boolean
 	) {
 		await database.ref(`rooms/${room.id}`).update({
 			cardsComparison: {
 				isComparingCards: isComparingCards,
 				attributeBeingCompared: attributeBeingCompared,
 				winnerCardName: winnerCardName,
+				isComparingSuperTrunfoAgainstCardTypeA:
+					isComparingSuperTrunfoAgainstCardTypeA,
 			},
 		});
 	}
