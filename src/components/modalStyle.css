@@ -1,0 +1,47 @@
+.modal-box {
+	/* width: 50vw; */
+	width: auto;
+	height: auto;
+}
+
+.modal-box-container {
+	display: flex;
+	flex-flow: column;
+	margin: 1rem;
+	overflow-y: hidden; /* Hide vertical scrollbar */
+	overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+.modal-title {
+	text-align: center;
+	letter-spacing: 0.5rem;
+	font-size: 3.5rem;
+	margin: 0;
+}
+
+.victory {
+	color: green;
+}
+
+.defeat {
+	color: red;
+}
+
+.modal-btn-home {
+	/* position: absolute; */
+	/* bottom: 1rem; */
+	/* width: 85%; */
+	height: 3rem;
+	font-size: 1.5rem;
+	background-color: #3d8dc5;
+	text-transform: uppercase;
+	font-family: Staatliches;
+	color: #fff;
+}
+
+.modal-text {
+	font-size: 1.5rem;
+	text-align: center;
+	flex-flow: column;
+	/* text-align: justify; */
+}
