@@ -1,4 +1,38 @@
 .hud-container {
 	display: flex;
-	height: 20vh;
+	flex-flow: row;
+	height: 15vh;
+	position: relative;
+}
+
+.waiting-second-player {
+	position: absolute;
+	width: max-content;
+	font-size: 4rem;
+	z-index: 999;
+	color: #ce3f3f;
+	/* text-shadow: 0px 6px black; */
+
+	margin: 0;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.waiting-player-label {
+	text-align: center;
+	color: #ce3f3f;
+	text-transform: uppercase;
+}
+
+.blink-animate {
+	animation: blinkText 0.8s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes blinkText {
+	50% {
+		color: transparent;
+	}
 }

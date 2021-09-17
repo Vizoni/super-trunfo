@@ -96,15 +96,11 @@ export function useGame() {
 			room.room,
 			Math.round(PACK_OF_CARDS.length / 2)
 		);
-		// currentUser.addCardsToDeck(room.room.id, newCards);
 		players.addCardsToDeck(room.room.id, currentUser.currentUser.id, newCards);
 	}
 
 	function isCurrentUserTurn() {
-		if (currentUser.currentUser.id == room.room.turn) {
-			return true;
-		}
-		return false;
+		return currentUser.currentUser.id == room.room.turn ? true : false;
 	}
 
 	function getFirstCardOfBothPlayers() {
@@ -223,6 +219,7 @@ export function useGame() {
 		return combatObjectResponse;
 	}
 
+	// TODO BUG: Se um usuário sai e outro entra, esse novo segundo player fica com as mesmas cartas do player 1
 	function userLeaveGame() {
 		room.removeUser(currentUser.currentUser);
 	}

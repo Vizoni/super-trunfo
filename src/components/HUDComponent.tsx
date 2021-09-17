@@ -1,4 +1,5 @@
 import { useGame } from "../hooks/useGame";
+import "./hudStyle.css";
 
 export function HUDComponent() {
 	const { currentUser, isCurrentUserTurn, isWaitingSecondPlayer } = useGame();
@@ -6,17 +7,30 @@ export function HUDComponent() {
 	return (
 		<>
 			<div className="hud-container">
-				{isWaitingSecondPlayer() && (
-					<div>
-						<h4>Aguardando segundo jogador...</h4>
+				<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
+				{!isWaitingSecondPlayer() && (
+					<div className="waiting-second-player">
+						{isCurrentUserTurn() ? (
+							<span className="waiting-player-label blink-animate">
+								É A SUA VEZ DE JOGAR!
+							</span>
+						) : (
+							<span className="waiting-player-label">
+								É a vez do seu oponente. Aguarde.
+							</span>
+						)}
 					</div>
 				)}
-				{isCurrentUserTurn() ? (
-					<h2>SUA VEZ!!</h2>
-				) : (
-					<h2>É a vez do seu oponente. Aguarde.</h2>
-				)}
-				<h2>Cards no seu baralho: {currentUser.currentUserDeck.length}</h2>
+				<div>
+					{isWaitingSecondPlayer() && (
+						<div className="waiting-second-player">
+							{/* <div className="waiting-second-player"> */}
+							<span className="waiting-player-label blink-animate">
+								Aguardando segundo jogador
+							</span>
+						</div>
+					)}
+				</div>
 			</div>
 		</>
 	);

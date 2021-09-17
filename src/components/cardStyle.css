@@ -69,7 +69,7 @@
 	padding: 6px;
 	color: white;
 	border-radius: 10px;
-	animation: bounce 0.5s infinite alternate;
+	animation: bounce 0.5s 5s alternate;
 }
 
 .hide-all {
