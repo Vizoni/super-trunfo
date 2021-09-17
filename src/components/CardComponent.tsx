@@ -4,12 +4,13 @@ import { Card } from "../interfaces/Card";
 import "./cardStyle.css";
 
 export function CardComponent(props: any) {
-	const { isCurrentUserTurn, cardMatch, room } = useGame();
+	const { isCurrentUserTurn, cardMatch, room, players, isWaitingSecondPlayer } =
+		useGame();
 
 	const [doFlipAnimation, setDoFlipAnimation] = useState(false);
 
-	function handleClick(cardIndexInCurrentUserDeck: any) {
-		if (!isCurrentUserTurn()) {
+	function compareAttribute(cardIndexInCurrentUserDeck: any) {
+		if (!isCurrentUserTurn() || isWaitingSecondPlayer()) {
 			return;
 		}
 		cardMatch(cardIndexInCurrentUserDeck);
@@ -69,7 +70,6 @@ export function CardComponent(props: any) {
 							<div className="image-box">
 								<img className="card-image" src={props.currentCard.image}></img>
 							</div>
-							{/* <div className="attribute-list"> */}
 							<div
 								className={`attribute-list ${
 									room.room.cardsComparison
@@ -82,9 +82,11 @@ export function CardComponent(props: any) {
 									(attribute: any, index: any) => {
 										return (
 											<div
-												onClick={() => handleClick(index)}
+												onClick={() => compareAttribute(index)}
 												className={`attribute-item ${
-													isCurrentUserTurn() ? `clickable` : ``
+													isCurrentUserTurn() && !isWaitingSecondPlayer()
+														? `clickable`
+														: ``
 												}
 									${
 										(room.room.cardsComparison.isComparingCards &&

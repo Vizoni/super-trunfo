@@ -45,7 +45,6 @@ type RoomContextType = {
 		isComparingSuperTrunfoAgainstCardTypeA: boolean
 	) => void;
 	removeUser: (user: Player) => void;
-	isWaitingSecondPlayer: () => boolean;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
@@ -148,10 +147,6 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		await database.ref(`rooms/${room.id}/players/${user.id}`).remove();
 	}
 
-	function isWaitingSecondPlayer(): boolean {
-		return room.playersCounter < 2 ? true : false;
-	}
-
 	return (
 		<RoomContext.Provider
 			value={{
@@ -166,7 +161,6 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				updateRoomWithWinnerPlayer,
 				updateRoomIsComparingCards,
 				removeUser,
-				isWaitingSecondPlayer,
 			}}
 		>
 			{children}

@@ -37,6 +37,7 @@
 	text-transform: uppercase;
 	font-family: Staatliches;
 	color: #fff;
+	cursor: pointer;
 }
 
 .modal-text {

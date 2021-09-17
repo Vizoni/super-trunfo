@@ -13,7 +13,7 @@ export function useGame() {
 	const room = useContext(RoomContext);
 	const deck = useContext(GameDeckContext);
 
-	// everytime the current user's deck changes
+	// everytime the current user's deck changes checks if the game is over
 	useEffect(() => {
 		isGameOver();
 	}, [currentUser.currentUserDeck]);
@@ -23,6 +23,10 @@ export function useGame() {
 		if (currentUser.currentUserDeck.length == PACK_OF_CARDS.length) {
 			room.updateRoomWithWinnerPlayer(currentUser.currentUser.id);
 		}
+	}
+
+	function isWaitingSecondPlayer() {
+		return players.players.length == 1 ? true : false;
 	}
 
 	// main function to start listening the contexts and make them get updated regularly
@@ -236,5 +240,6 @@ export function useGame() {
 		isCurrentUserTurn,
 		cardMatch,
 		userLeaveGame,
+		isWaitingSecondPlayer,
 	};
 }

@@ -7,7 +7,7 @@ import { useGame } from "../hooks/useGame";
 import "./../style.css";
 
 export function Game() {
-	const { currentUser, room, players } = useGame();
+	const { currentUser, room, players, isWaitingSecondPlayer } = useGame();
 	const history = useHistory();
 
 	function canDisplayCard(player: any) {
@@ -55,7 +55,7 @@ export function Game() {
 
 				<div
 					className={`flex-container ${
-						room.isWaitingSecondPlayer() ? `waiting-player` : ``
+						isWaitingSecondPlayer() ? `waiting-player` : ``
 					}`}
 				>
 					{gameIsOverAndHasAWinner() && (
