@@ -63,59 +63,57 @@ export function Game() {
 
 	return (
 		<>
-			<div>
-				<HUDComponent />
+			<HUDComponent />
 
-				<div
-					className={`flex-container ${
-						isWaitingSecondPlayer() ? `waiting-player` : ``
+			<div className={isWaitingSecondPlayer() ? `waiting-player` : ``}>
+				{gameIsOverAndHasAWinner() && (
+					<div>
+						{isCurrentPlayerTheWinner() && (
+							<ModalComponent
+								display={true}
+								userWon={isCurrentPlayerTheWinner()}
+								title="VITÓRIA!"
+								subTitle="Parabéns, você venceu o duelo!"
+								text="Volte para o Lobby para encontrar um novo oponente!"
+								btnLabel="Voltar para o Lobby"
+								closeFunction={redirectUserToHome}
+							></ModalComponent>
+						)}
+						{!isCurrentPlayerTheWinner() && (
+							<ModalComponent
+								display={true}
+								userWon={isCurrentPlayerTheWinner()}
+								title="DERROTA!"
+								subTitle="Que pena, não foi dessa vez!"
+								text="Volte para o Lobby para encontrar um novo oponente!"
+								btnLabel="Voltar para o Lobby"
+								closeFunction={redirectUserToHome}
+							></ModalComponent>
+						)}
+					</div>
+				)}
+				{/* <div
+					className={`deck-amount ${
+						!isSecondPlayer ? `player-one` : `player-two`
 					}`}
 				>
-					{gameIsOverAndHasAWinner() && (
-						<div>
-							{isCurrentPlayerTheWinner() && (
-								<ModalComponent
-									display={true}
-									userWon={isCurrentPlayerTheWinner()}
-									title="VITÓRIA!"
-									subTitle="Parabéns, você venceu o duelo!"
-									text="Volte para o Lobby para encontrar um novo oponente!"
-									btnLabel="Voltar para o Lobby"
-									closeFunction={redirectUserToHome}
-								></ModalComponent>
-							)}
-							{!isCurrentPlayerTheWinner() && (
-								<ModalComponent
-									display={true}
-									userWon={isCurrentPlayerTheWinner()}
-									title="DERROTA!"
-									subTitle="Que pena, não foi dessa vez!"
-									text="Volte para o Lobby para encontrar um novo oponente!"
-									btnLabel="Voltar para o Lobby"
-									closeFunction={redirectUserToHome}
-								></ModalComponent>
-							)}
-						</div>
-					)}
-					<div
-						className={`deck-amount ${
-							!isSecondPlayer ? `player-one` : `player-two`
-						}`}
-					>
-						<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
-					</div>
-					{players.players.map((player, index) => {
-						if (player.deck) {
-							return (
+					<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
+				</div> */}
+			</div>
+			<div className="container">
+				{players.players.map((player, index) => {
+					if (player.deck) {
+						return (
+							<>
 								<CardComponent
 									key={index}
 									currentCard={player.deck[0]}
 									display={canDisplayCard(player)}
 								></CardComponent>
-							);
-						}
-					})}
-				</div>
+							</>
+						);
+					}
+				})}
 			</div>
 		</>
 	);

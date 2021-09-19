@@ -11,18 +11,6 @@ body {
 /* @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Karantinafamily=Patua+One&family=Secular+One&family=Staatliches&display=swap"); */
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Karantina&family=Patua+One&family=Secular+One&family=Staatliches&display=swap");
 
-.cards-comparison {
-	display: flex;
-	/* flex-direction: row; */
-	justify-content: space-between;
-	/* align-items: stretch; */
-}
-
-.player-side {
-	width: 50%;
-	height: 100%;
-}
-
 .winner-card-label {
 	text-align: center;
 	font-family: monospace;
@@ -40,25 +28,6 @@ body {
 	}
 }
 
-.flex-container {
-	/* width: 80%; */
-	/* width: 50%; */
-	min-height: 300px;
-	/* margin: 0 auto; */
-	display: -webkit-flex; /* Safari */
-	display: flex; /* Standard syntax */
-}
-.flex-container .column {
-	padding: 10px;
-	background: #dbdfe5;
-	-webkit-flex: 1; /* Safari */
-	-ms-flex: 1; /* IE 10 */
-	flex: 1; /* Standard syntax */
-}
-.flex-container .column.bg-alt {
-	background: #b4bac0;
-}
-
 div.home-page {
 	width: 100%;
 	height: 100vh;
@@ -68,7 +37,6 @@ div.home-page {
 	background-color: #fff;
 	flex-direction: column;
 	font-size: 40px;
-	/* font-family: Karantina; */
 	font-family: Staatliches;
 	padding: 1em 0;
 	position: fixed;
@@ -77,7 +45,6 @@ div.home-page {
 .join-room {
 	width: 75%;
 	text-align: center;
-	/* border: 3px solid #ecebeb; */
 	border-radius: 2%;
 }
 
@@ -94,7 +61,6 @@ div.home-page {
 	margin: 1em 1em;
 	width: 75%;
 	text-align: center;
-	/* font-family: Karantina; */
 	font-family: Staatliches;
 }
 
@@ -103,7 +69,6 @@ div.home-page {
 	background-color: #3d8dc5;
 	border: 3px solid #3d8dc5;
 	cursor: pointer;
-	/* font-family: Karantina; */
 	font-family: Staatliches;
 }
 
@@ -112,7 +77,6 @@ div.home-page {
 	background-color: #c7c5c5;
 	border: 3px solid #c7c5c5;
 	cursor: pointer;
-	/* font-family: Karantina; */
 	font-family: Staatliches;
 }
 
@@ -122,7 +86,6 @@ div.home-page {
 	border-bottom: 1px solid #b4bac0;
 	line-height: 0.1em;
 	margin: 0.7em 12.5%;
-	/* font-family: Karantina; */
 	font-family: Staatliches;
 }
 
@@ -138,19 +101,22 @@ div span {
 
 /* -------------------- */
 
-.player-one {
+.deck-amount {
 	display: flex;
-	flex-flow: row;
-	left: 18%;
+	font-size: 1.5rem;
+}
+
+.player-one {
+	justify-content: left;
 }
 
 .player-two {
-	display: flex;
-	flex-flow: row-reverse;
-	right: 15%;
+	justify-content: right;
 }
 
-.deck-amount {
-	position: absolute;
-	top: 12vh;
+/* ---------------- FLIP CONTAINER 2 */
+
+.container {
+	display: flex;
+	justify-content: center;
 }

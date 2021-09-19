@@ -3,11 +3,15 @@
 	border-radius: 5%;
 	background-color: #fdfdcb;
 	padding: 15px;
-	flex: 1;
-	margin: 2% 5%;
+	/* flex: 1; */
+	/* margin: 2% 5%; */
 	max-width: 50vh;
+	height: 76vh;
 	text-transform: uppercase;
-	/* perspective: 1000px; */
+}
+
+div.card span {
+	background-color: #fdfdcb !important;
 }
 
 .winner-card {
@@ -75,25 +79,27 @@
 .hide-all {
 	border: rgb(63, 211, 166) 3px solid;
 	line-height: 12vh;
-	vertical-align: middle;
+	/* vertical-align: middle; */
 	text-align: center;
 	text-transform: uppercase;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	color: #c3bb82;
+	overflow: hidden;
 }
 
 .hided-card-logo {
-	font-size: 8rem;
+	font-size: 7vw;
+	margin: 2rem auto;
 }
 
 .hided-card-h4 {
-	font-size: 2rem;
+	font-size: 2vw;
 }
 
 .deck-theme-name {
-	font-size: 3rem;
+	font-size: 3vw;
 }
 
 .image-box {
@@ -173,11 +179,10 @@
 	animation-iteration-count: infinite;
 }
 
-/* ==================== FLIP CARD 2 */
 .flip-container {
-	display: flex;
-	flex: 1 1;
+	width: 25vw;
 	perspective: 1000px;
+	margin: 2rem 4rem;
 }
 
 .flipper {
@@ -188,7 +193,6 @@
 	transform-style: preserve-3d;
 }
 
-/* .flip-container:hover .flipper { */
 .do-flip .flipper {
 	transform: rotateY(180deg);
 }
