@@ -3,22 +3,11 @@ import { useGame } from "../hooks/useGame";
 import "./hudStyle.css";
 
 export function HUDComponent() {
-	const {
-		currentUser,
-		isCurrentUserTurn,
-		isWaitingSecondPlayer,
-		currentUserIsSecondPlayer,
-	} = useGame();
-
-	const [isSecondPlayer, setIsSecondPlayer] = useState(false);
-
-	useEffect(() => {
-		setIsSecondPlayer(currentUserIsSecondPlayer());
-	}, [currentUser]);
+	const { isCurrentUserTurn, isWaitingSecondPlayer } = useGame();
 
 	return (
 		<>
-			<div className="hud-container">
+			<header>
 				{!isWaitingSecondPlayer() && (
 					<div className="waiting-second-player">
 						{isCurrentUserTurn() ? (
@@ -32,24 +21,14 @@ export function HUDComponent() {
 						)}
 					</div>
 				)}
-				<div>
-					{isWaitingSecondPlayer() && (
-						<div className="waiting-second-player">
-							{/* <div className="waiting-second-player"> */}
-							<span className="waiting-player-label blink-animate">
-								Aguardando segundo jogador
-							</span>
-						</div>
-					)}
-				</div>
-				{/* <div
-					className={`deck-amount ${
-						!isSecondPlayer ? `player-one` : `player-two`
-					}`}
-				>
-					<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
-				</div> */}
-			</div>
+				{isWaitingSecondPlayer() && (
+					<div className="waiting-second-player">
+						<span className="waiting-player-label blink-animate">
+							Aguardando segundo jogador
+						</span>
+					</div>
+				)}
+			</header>
 		</>
 	);
 }

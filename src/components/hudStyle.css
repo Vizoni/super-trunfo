@@ -4,34 +4,10 @@
 	margin: 2vh;
 }
 
-/* .hud-container .player-one {
-	display: flex;
-	flex-flow: row;
-	left: 18%;
-}
-
-.hud-container .player-two {
-	display: flex;
-	flex-flow: row-reverse;
-	right: 15%;
-}
-
-.deck-amount {
-	position: absolute;
-	top: 10vh;
-} */
-
 .waiting-second-player {
-	position: absolute;
-	width: max-content;
+	display: flex;
+	justify-content: center;
 	font-size: 4rem;
-	z-index: 999;
-	color: #ce3f3f;
-	margin: 0;
-	top: 35%;
-	left: 50%;
-	-ms-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
 }
 
 .waiting-player-label {
