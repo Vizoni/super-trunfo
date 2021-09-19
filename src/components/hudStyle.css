@@ -1,9 +1,25 @@
 .hud-container {
+	position: relative;
+	height: 10vh;
+	margin: 2vh;
+}
+
+/* .hud-container .player-one {
 	display: flex;
 	flex-flow: row;
-	height: 15vh;
-	position: relative;
+	left: 18%;
 }
+
+.hud-container .player-two {
+	display: flex;
+	flex-flow: row-reverse;
+	right: 15%;
+}
+
+.deck-amount {
+	position: absolute;
+	top: 10vh;
+} */
 
 .waiting-second-player {
 	position: absolute;
@@ -11,10 +27,8 @@
 	font-size: 4rem;
 	z-index: 999;
 	color: #ce3f3f;
-	/* text-shadow: 0px 6px black; */
-
 	margin: 0;
-	top: 50%;
+	top: 35%;
 	left: 50%;
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
@@ -24,6 +38,7 @@
 	text-align: center;
 	color: #ce3f3f;
 	text-transform: uppercase;
+	background-color: transparent;
 }
 
 .blink-animate {

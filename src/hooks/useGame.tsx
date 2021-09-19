@@ -26,17 +26,24 @@ export function useGame() {
 	}
 
 	function isWaitingSecondPlayer() {
-		return players.players.length == 1 ? true : false;
+		return players.players.length == 1;
+	}
+
+	function currentUserIsSecondPlayer() {
+		if (players.players[1]) {
+			return players.players[1].id == currentUser.currentUser.id;
+		}
+		return false;
 	}
 
 	// main function to start listening the contexts and make them get updated regularly
 	// method has to be called just two times: Or when you create a room or when someone joins it.
 	async function startListenToAllContexts(roomId: string, playerId: string) {
 		if (!roomId) return;
-		await room.updateRoom(roomId);
-		await deck.listenToDeckUpdate(roomId);
-		await players.listenToPlayerUpdate(roomId);
-		await currentUser.listenToCurrentUserUpdate(roomId, playerId);
+		room.updateRoom(roomId);
+		deck.listenToDeckUpdate(roomId);
+		players.listenToPlayerUpdate(roomId);
+		currentUser.listenToCurrentUserUpdate(roomId, playerId);
 	}
 
 	async function createNewRoom() {
@@ -100,7 +107,7 @@ export function useGame() {
 	}
 
 	function isCurrentUserTurn() {
-		return currentUser.currentUser.id == room.room.turn ? true : false;
+		return currentUser.currentUser.id === room.room.turn;
 	}
 
 	function getFirstCardOfBothPlayers() {
@@ -238,5 +245,6 @@ export function useGame() {
 		cardMatch,
 		userLeaveGame,
 		isWaitingSecondPlayer,
+		currentUserIsSecondPlayer,
 	};
 }

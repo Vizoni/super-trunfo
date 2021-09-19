@@ -135,3 +135,22 @@ div span {
 	width: 40vh;
 	height: auto;
 }
+
+/* -------------------- */
+
+.player-one {
+	display: flex;
+	flex-flow: row;
+	left: 18%;
+}
+
+.player-two {
+	display: flex;
+	flex-flow: row-reverse;
+	right: 15%;
+}
+
+.deck-amount {
+	position: absolute;
+	top: 12vh;
+}

@@ -4,7 +4,7 @@ import { Card } from "../interfaces/Card";
 import "./cardStyle.css";
 
 export function CardComponent(props: any) {
-	const { isCurrentUserTurn, cardMatch, room, players, isWaitingSecondPlayer } =
+	const { isCurrentUserTurn, cardMatch, room, isWaitingSecondPlayer } =
 		useGame();
 
 	const [doFlipAnimation, setDoFlipAnimation] = useState(false);
@@ -19,21 +19,18 @@ export function CardComponent(props: any) {
 	function isCurrentAttributeBeingCompared(currentCardAttributeName: string) {
 		const attributeBeingCompared =
 			room.room.cardsComparison.attributeBeingCompared;
-		return attributeBeingCompared == currentCardAttributeName ? true : false;
+		return attributeBeingCompared === currentCardAttributeName;
 	}
 
 	function highLightCardTypeAAgainstSuperTrunfo(card: Card) {
-		if (
+		return (
 			room.room.cardsComparison.isComparingSuperTrunfoAgainstCardTypeA &&
 			card.type == "A"
-		) {
-			return true;
-		}
-		return false;
+		);
 	}
 
 	function isCardWinner(card: Card) {
-		return card.name == room.room.cardsComparison.winnerCardName ? true : false;
+		return card.name === room.room.cardsComparison.winnerCardName;
 	}
 
 	useEffect(() => {
@@ -82,6 +79,7 @@ export function CardComponent(props: any) {
 									(attribute: any, index: any) => {
 										return (
 											<div
+												key={index}
 												onClick={() => compareAttribute(index)}
 												className={`attribute-item ${
 													isCurrentUserTurn() && !isWaitingSecondPlayer()

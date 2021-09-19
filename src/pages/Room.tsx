@@ -14,9 +14,11 @@ export function Room() {
 		};
 	}, []);
 
-	window.onbeforeunload = (event) => {
+	window.addEventListener("beforeunload", function (e) {
+		e.preventDefault();
+		e.returnValue = "";
 		userLeaveGame();
-	};
+	});
 
 	return (
 		<>

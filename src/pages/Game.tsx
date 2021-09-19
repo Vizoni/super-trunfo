@@ -7,7 +7,16 @@ import { useGame } from "../hooks/useGame";
 import "./../style.css";
 
 export function Game() {
-	const { currentUser, room, players, isWaitingSecondPlayer } = useGame();
+	const {
+		currentUser,
+		room,
+		players,
+		isWaitingSecondPlayer,
+		currentUserIsSecondPlayer,
+	} = useGame();
+
+	const [isSecondPlayer, setIsSecondPlayer] = useState(false);
+
 	const history = useHistory();
 
 	function canDisplayCard(player: any) {
@@ -48,6 +57,10 @@ export function Game() {
 		window.location.reload(); // to reset the hooks
 	}
 
+	useEffect(() => {
+		setIsSecondPlayer(currentUserIsSecondPlayer());
+	}, [currentUser]);
+
 	return (
 		<>
 			<div>
@@ -84,16 +97,21 @@ export function Game() {
 							)}
 						</div>
 					)}
+					<div
+						className={`deck-amount ${
+							!isSecondPlayer ? `player-one` : `player-two`
+						}`}
+					>
+						<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
+					</div>
 					{players.players.map((player, index) => {
 						if (player.deck) {
 							return (
-								<>
-									<CardComponent
-										key={index}
-										currentCard={player.deck[0]}
-										display={canDisplayCard(player)}
-									></CardComponent>
-								</>
+								<CardComponent
+									key={index}
+									currentCard={player.deck[0]}
+									display={canDisplayCard(player)}
+								></CardComponent>
 							);
 						}
 					})}

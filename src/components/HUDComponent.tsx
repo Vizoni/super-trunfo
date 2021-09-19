@@ -1,13 +1,24 @@
+import { useEffect, useState } from "react";
 import { useGame } from "../hooks/useGame";
 import "./hudStyle.css";
 
 export function HUDComponent() {
-	const { currentUser, isCurrentUserTurn, isWaitingSecondPlayer } = useGame();
+	const {
+		currentUser,
+		isCurrentUserTurn,
+		isWaitingSecondPlayer,
+		currentUserIsSecondPlayer,
+	} = useGame();
+
+	const [isSecondPlayer, setIsSecondPlayer] = useState(false);
+
+	useEffect(() => {
+		setIsSecondPlayer(currentUserIsSecondPlayer());
+	}, [currentUser]);
 
 	return (
 		<>
 			<div className="hud-container">
-				<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
 				{!isWaitingSecondPlayer() && (
 					<div className="waiting-second-player">
 						{isCurrentUserTurn() ? (
@@ -31,6 +42,13 @@ export function HUDComponent() {
 						</div>
 					)}
 				</div>
+				{/* <div
+					className={`deck-amount ${
+						!isSecondPlayer ? `player-one` : `player-two`
+					}`}
+				>
+					<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
+				</div> */}
 			</div>
 		</>
 	);
