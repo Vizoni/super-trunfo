@@ -1,3 +1,8 @@
+header {
+	display: flex;
+	justify-content: space-between;
+}
+
 .hud-container {
 	position: relative;
 	height: 10vh;
@@ -7,7 +12,7 @@
 .waiting-second-player {
 	display: flex;
 	justify-content: center;
-	font-size: 4rem;
+	font-size: 4vw;
 }
 
 .waiting-player-label {
@@ -26,4 +31,8 @@
 	50% {
 		color: transparent;
 	}
+}
+
+.deck-amount {
+	margin: 1vw;
 }

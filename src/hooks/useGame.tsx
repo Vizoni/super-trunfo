@@ -36,6 +36,10 @@ export function useGame() {
 		return false;
 	}
 
+	function playerIsCurrentUser(player: any) {
+		return player.id == currentUser.currentUser.id;
+	}
+
 	// main function to start listening the contexts and make them get updated regularly
 	// method has to be called just two times: Or when you create a room or when someone joins it.
 	async function startListenToAllContexts(roomId: string, playerId: string) {
@@ -246,5 +250,6 @@ export function useGame() {
 		userLeaveGame,
 		isWaitingSecondPlayer,
 		currentUserIsSecondPlayer,
+		playerIsCurrentUser,
 	};
 }

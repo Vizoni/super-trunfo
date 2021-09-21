@@ -3,11 +3,27 @@ import { useGame } from "../hooks/useGame";
 import "./hudStyle.css";
 
 export function HUDComponent() {
-	const { isCurrentUserTurn, isWaitingSecondPlayer } = useGame();
+	const {
+		players,
+		currentUser,
+		isCurrentUserTurn,
+		isWaitingSecondPlayer,
+		currentUserIsSecondPlayer,
+		playerIsCurrentUser,
+	} = useGame();
 
 	return (
 		<>
 			<header>
+				<div>
+					{!currentUserIsSecondPlayer() &&
+						players.players[0] &&
+						playerIsCurrentUser(players.players[0]) && (
+							<span className="deck-amount">
+								{currentUser.currentUserDeck.length} cartas
+							</span>
+						)}
+				</div>
 				{!isWaitingSecondPlayer() && (
 					<div className="waiting-second-player">
 						{isCurrentUserTurn() ? (
@@ -28,6 +44,15 @@ export function HUDComponent() {
 						</span>
 					</div>
 				)}
+				<div>
+					{currentUserIsSecondPlayer() &&
+						players.players[1] &&
+						playerIsCurrentUser(players.players[1]) && (
+							<span className="deck-amount">
+								{currentUser.currentUserDeck.length} cartas
+							</span>
+						)}
+				</div>
 			</header>
 		</>
 	);

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { CardComponent } from "../components/CardComponent";
 import { HUDComponent } from "../components/HUDComponent";
@@ -12,20 +11,18 @@ export function Game() {
 		room,
 		players,
 		isWaitingSecondPlayer,
-		currentUserIsSecondPlayer,
+		playerIsCurrentUser,
 	} = useGame();
-
-	const [isSecondPlayer, setIsSecondPlayer] = useState(false);
 
 	const history = useHistory();
 
 	function canDisplayCard(player: any) {
 		if (playerHasAtLeastOneCardOnDeck(player)) {
-			if (isCurrentUserCard(player)) {
+			if (playerIsCurrentUser(player)) {
 				return true;
 			}
 			if (
-				!isCurrentUserCard(player) &&
+				!playerIsCurrentUser(player) &&
 				room.room.cardsComparison.isComparingCards
 			) {
 				return true;
@@ -34,16 +31,12 @@ export function Game() {
 		return false;
 	}
 
-	function isCurrentUserCard(player: any) {
-		return player.id == currentUser.currentUser.id ? true : false;
-	}
-
 	function playerHasAtLeastOneCardOnDeck(player: any) {
 		return player.deck.length > 0 ? true : false;
 	}
 
 	function gameIsOverAndHasAWinner() {
-		return room.room.winnerPlayerId ? true : false;
+		return room.room.winnerPlayerId;
 	}
 
 	function isCurrentPlayerTheWinner() {
@@ -56,10 +49,6 @@ export function Game() {
 		});
 		window.location.reload(); // to reset the hooks
 	}
-
-	useEffect(() => {
-		setIsSecondPlayer(currentUserIsSecondPlayer());
-	}, [currentUser]);
 
 	return (
 		<>
