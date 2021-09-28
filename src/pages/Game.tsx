@@ -54,9 +54,12 @@ export function Game() {
 		<>
 			<HUDComponent />
 
-			<div className={isWaitingSecondPlayer() ? `waiting-player` : ``}>
+			<div
+				className={isWaitingSecondPlayer() ? `waiting-player` : ``}
+				data-testId="is-waiting-player"
+			>
 				{gameIsOverAndHasAWinner() && (
-					<div>
+					<div data-testId="game-over">
 						{isCurrentPlayerTheWinner() && (
 							<ModalComponent
 								display={true}
@@ -81,15 +84,8 @@ export function Game() {
 						)}
 					</div>
 				)}
-				{/* <div
-					className={`deck-amount ${
-						!isSecondPlayer ? `player-one` : `player-two`
-					}`}
-				>
-					<span>Você tem {currentUser.currentUserDeck.length} cartas</span>
-				</div> */}
 			</div>
-			<div className="container">
+			<div className="container" data-testId="game-container">
 				{players.players.map((player, index) => {
 					if (player.deck) {
 						return (

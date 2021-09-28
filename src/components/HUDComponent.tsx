@@ -14,12 +14,15 @@ export function HUDComponent() {
 
 	return (
 		<>
-			<header>
+			<header data-testId="hud-header">
 				<div>
 					{!currentUserIsSecondPlayer() &&
 						players.players[0] &&
 						playerIsCurrentUser(players.players[0]) && (
-							<span className="deck-amount">
+							<span
+								className="deck-amount"
+								data-testId="hud-deck-amount-first-player"
+							>
 								{currentUser.currentUserDeck.length} cartas
 							</span>
 						)}
@@ -27,18 +30,27 @@ export function HUDComponent() {
 				{!isWaitingSecondPlayer() && (
 					<div className="waiting-second-player">
 						{isCurrentUserTurn() ? (
-							<span className="waiting-player-label blink-animate">
+							<span
+								className="waiting-player-label blink-animate"
+								data-testId="my-turn"
+							>
 								É A SUA VEZ DE JOGAR!
 							</span>
 						) : (
-							<span className="waiting-player-label">
+							<span
+								className="waiting-player-label"
+								data-testId="opponent-turn"
+							>
 								É a vez do seu oponente. Aguarde.
 							</span>
 						)}
 					</div>
 				)}
 				{isWaitingSecondPlayer() && (
-					<div className="waiting-second-player">
+					<div
+						className="waiting-second-player"
+						data-testId="waiting-second-player"
+					>
 						<span className="waiting-player-label blink-animate">
 							Aguardando segundo jogador
 						</span>
@@ -48,7 +60,10 @@ export function HUDComponent() {
 					{currentUserIsSecondPlayer() &&
 						players.players[1] &&
 						playerIsCurrentUser(players.players[1]) && (
-							<span className="deck-amount">
+							<span
+								className="deck-amount"
+								data-testId="hud-deck-amount-second-player"
+							>
 								{currentUser.currentUserDeck.length} cartas
 							</span>
 						)}
