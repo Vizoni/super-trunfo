@@ -43,6 +43,7 @@ export function CardComponent(props: any) {
 				className={`flip-container ${doFlipAnimation ? "do-flip" : ""} ${
 					isCardWinner(props.currentCard) ? `winner-card` : ``
 				}`}
+				data-testId="card-component"
 			>
 				<div className="flipper">
 					<div className="front">
@@ -50,7 +51,7 @@ export function CardComponent(props: any) {
 							<div className="header">
 								<h2 className="car-name">{props.currentCard.name}</h2>
 								{props.currentCard.isSuperTrunfo && (
-									<h2 className="super-trunfo">
+									<h2 className="super-trunfo" data-testId="super-trunfo-label">
 										{props.currentCard.isSuperTrunfo ? "SUPER TRUNFO" : ""}
 									</h2>
 								)}
@@ -60,6 +61,7 @@ export function CardComponent(props: any) {
 											? `high-light-type animation-blink`
 											: ""
 									}`}
+									data-testId="high-light-a-type"
 								>
 									{props.currentCard.type}
 								</h2>
@@ -74,6 +76,7 @@ export function CardComponent(props: any) {
 										? `blur`
 										: ""
 								}`}
+								data-testId="attr-list"
 							>
 								{props.currentCard.attributes.map(
 									(attribute: any, index: any) => {
@@ -101,6 +104,7 @@ export function CardComponent(props: any) {
 														? `high-light-attribute animation-blink`
 														: ``
 												}`}
+												data-testId="attr-row"
 											>
 												<div>
 													<h2>{attribute.name}</h2>

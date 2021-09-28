@@ -7,7 +7,7 @@ export function Home() {
 	const history = useHistory();
 
 	const { createNewRoom, findRoom, joinRoom } = useGame();
-	const [roomId, setRoomId] = useState<string>();
+	const [roomId, setRoomId] = useState<string>("");
 
 	async function handleCreateRoom(event: FormEvent) {
 		event.preventDefault();
@@ -28,7 +28,6 @@ export function Home() {
 		// }
 		if (foundRoom) {
 			await joinRoom(foundRoom);
-			// return;
 			history.push({
 				pathname: `/rooms/${roomId}`,
 				state: { roomId: roomId },
@@ -53,8 +52,13 @@ export function Home() {
 						placeholder="Insira o código da sala"
 						value={roomId}
 						onChange={(event) => setRoomId(event.target.value)}
+						data-testId="input-room-id"
 					/>
-					<button className="font-join btn-join-room" type="submit">
+					<button
+						className="font-join btn-join-room"
+						type="submit"
+						data-testId="btn-join-room"
+					>
 						Entrar
 					</button>
 					<div className="or-divider">
@@ -64,6 +68,7 @@ export function Home() {
 						<button
 							className="btn-create-room font-join"
 							onClick={handleCreateRoom}
+							data-testId="btn-create-room"
 						>
 							Criar Sala
 						</button>

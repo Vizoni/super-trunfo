@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -26,12 +23,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test-jest": "jest"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
@@ -47,6 +44,14 @@
     ]
   },
   "devDependencies": {
-    "@types/uuid": "^8.3.1"
+    "@babel/core": "^7.15.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@types/jest": "^27.0.2",
+    "@types/react-test-renderer": "^17.0.1",
+    "@types/uuid": "^8.3.1",
+    "react-test-renderer": "^17.0.2",
+    "regenerator-runtime": "^0.13.9"
   }
 }
