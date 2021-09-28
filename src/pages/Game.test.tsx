@@ -47,6 +47,7 @@ let mockisWaitingSecondPlayer = () => false;
 let mockplayerIsCurrentUser = () => true;
 let mockcurrentUserIsSecondPlayer = () => false;
 let mockisCurrentUserTurn = () => true;
+let mockisGameOver = () => false;
 
 jest.mock("./../hooks/useGame", () => {
 	return {
@@ -63,6 +64,7 @@ jest.mock("./../hooks/useGame", () => {
 				playerIsCurrentUser: mockplayerIsCurrentUser,
 				currentUserIsSecondPlayer: mockcurrentUserIsSecondPlayer,
 				isCurrentUserTurn: mockisCurrentUserTurn,
+				isGameOver: mockisGameOver,
 			};
 		},
 	};
@@ -168,6 +170,7 @@ describe("<GAME>", () => {
 			currentUser: { id: playerId },
 			currentUserDeck: [{}, {}],
 		};
+		mockisGameOver = () => true;
 		render(<Game />);
 		const gameOver = screen.getByTestId("game-over");
 		expect(gameOver).toBeInTheDocument();
@@ -192,6 +195,7 @@ describe("<GAME>", () => {
 			currentUser: { id: "wrong-id" },
 			currentUserDeck: [{}, {}],
 		};
+		mockisGameOver = () => true;
 		render(<Game />);
 		const gameOver = screen.getByTestId("game-over");
 		expect(gameOver).toBeInTheDocument();

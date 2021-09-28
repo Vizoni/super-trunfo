@@ -15,11 +15,15 @@ export function useGame() {
 
 	// everytime the current user's deck changes checks if the game is over
 	useEffect(() => {
-		isGameOver();
+		checkCurrentUserHasAllTheCards();
 	}, [currentUser.currentUserDeck]);
 
-	// checks if the current user deck has the same ammount of cards from the full deck. If so, he's the winner.
 	function isGameOver() {
+		return room.room.winnerPlayerId ? true : false;
+	}
+
+	// checks if the current user deck has the same ammount of cards from the full deck. If so, he's the winner.
+	function checkCurrentUserHasAllTheCards() {
 		if (currentUser.currentUserDeck.length == PACK_OF_CARDS.length) {
 			room.updateRoomWithWinnerPlayer(currentUser.currentUser.id);
 		}
@@ -251,5 +255,6 @@ export function useGame() {
 		isWaitingSecondPlayer,
 		currentUserIsSecondPlayer,
 		playerIsCurrentUser,
+		isGameOver,
 	};
 }

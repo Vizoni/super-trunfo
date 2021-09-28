@@ -10,6 +10,7 @@ export function HUDComponent() {
 		isWaitingSecondPlayer,
 		currentUserIsSecondPlayer,
 		playerIsCurrentUser,
+		isGameOver,
 	} = useGame();
 
 	return (
@@ -27,7 +28,7 @@ export function HUDComponent() {
 							</span>
 						)}
 				</div>
-				{!isWaitingSecondPlayer() && (
+				{!isWaitingSecondPlayer() && !isGameOver() && (
 					<div className="waiting-second-player">
 						{isCurrentUserTurn() ? (
 							<span

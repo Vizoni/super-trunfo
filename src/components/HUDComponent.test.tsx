@@ -8,6 +8,7 @@ let mockcurrentUserIsSecondPlayer = () => false;
 let mockisWaitingSecondPlayer = () => false;
 let mockisCurrentUserTurn = () => true;
 let mockplayerIsCurrentUser = () => true;
+let mockisGameOver = () => false;
 
 jest.mock("./../hooks/useGame", () => {
 	return {
@@ -23,6 +24,7 @@ jest.mock("./../hooks/useGame", () => {
 				isWaitingSecondPlayer: mockisWaitingSecondPlayer,
 				currentUserIsSecondPlayer: mockcurrentUserIsSecondPlayer,
 				playerIsCurrentUser: mockplayerIsCurrentUser,
+				isGameOver: mockisGameOver,
 			};
 		},
 	};

@@ -12,6 +12,7 @@ export function Game() {
 		players,
 		isWaitingSecondPlayer,
 		playerIsCurrentUser,
+		isGameOver,
 	} = useGame();
 
 	const history = useHistory();
@@ -35,10 +36,6 @@ export function Game() {
 		return player.deck.length > 0 ? true : false;
 	}
 
-	function gameIsOverAndHasAWinner() {
-		return room.room.winnerPlayerId;
-	}
-
 	function isCurrentPlayerTheWinner() {
 		return room.room.winnerPlayerId == currentUser.currentUser.id;
 	}
@@ -58,7 +55,7 @@ export function Game() {
 				className={isWaitingSecondPlayer() ? `waiting-player` : ``}
 				data-testId="is-waiting-player"
 			>
-				{gameIsOverAndHasAWinner() && (
+				{isGameOver() && (
 					<div data-testId="game-over">
 						{isCurrentPlayerTheWinner() && (
 							<ModalComponent
@@ -69,6 +66,7 @@ export function Game() {
 								text="Volte para o Lobby para encontrar um novo oponente!"
 								btnLabel="Voltar para o Lobby"
 								closeFunction={redirectUserToHome}
+								data-testId="victory-modal"
 							></ModalComponent>
 						)}
 						{!isCurrentPlayerTheWinner() && (
