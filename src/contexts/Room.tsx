@@ -135,16 +135,20 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 
 	async function removeUser(user: Player) {
 		/* pra remover o usuário tem que pegar as cartas dele e devolver pro deck do game, remover o usuário e depois atualizar o contador de players */
-		const currentUserDeckFromDatabase = await (
-			await database.ref(`rooms/${room.id}/players/${user.id}/deck`).get()
-		).val();
-		const finalDeck = currentUserDeckFromDatabase.concat(room.deck);
-		const updateRoomWithDefaultValues = {
-			deck: shuffle(finalDeck),
-			playersCounter: Object.keys(room.players).length,
-		};
-		await database.ref(`rooms/${room.id}`).update(updateRoomWithDefaultValues);
-		await database.ref(`rooms/${room.id}/players/${user.id}`).remove();
+		if (room.id) {
+			const currentUserDeckFromDatabase = await (
+				await database.ref(`rooms/${room.id}/players/${user.id}/deck`).get()
+			).val();
+			const finalDeck = currentUserDeckFromDatabase.concat(room.deck);
+			const updateRoomWithDefaultValues = {
+				deck: shuffle(finalDeck),
+				playersCounter: Object.keys(room.players).length,
+			};
+			await database
+				.ref(`rooms/${room.id}`)
+				.update(updateRoomWithDefaultValues);
+			await database.ref(`rooms/${room.id}/players/${user.id}`).remove();
+		}
 	}
 
 	return (

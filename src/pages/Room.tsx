@@ -1,13 +1,19 @@
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useGame } from "../hooks/useGame";
 import { Game } from "./Game";
 
 export function Room() {
-	const { buyCardsForGameStart, userLeaveGame } = useGame();
+	const { currentUser, buyCardsForGameStart, userLeaveGame } = useGame();
+
+	const history = useHistory();
 
 	useEffect(() => {
-		console.log("--------- ENTROU NA SALA ---------");
-		console.log("Usuário vai comprar 2 cards");
+		if (!currentUser.currentUser.id) {
+			history.push({
+				pathname: `/`,
+			});
+		}
 		buyCardsForGameStart();
 		return () => {
 			userLeaveGame();
