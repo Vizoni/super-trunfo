@@ -2,6 +2,9 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { HUDComponent } from "./HUDComponent";
 
+let roomCode = "minha sala";
+
+let mockroom = { id: roomCode };
 let mockcurrentUserDeck = [{}, {}, {}];
 let mockplayers = [{}, {}];
 let mockcurrentUserIsSecondPlayer = () => false;
@@ -14,6 +17,9 @@ jest.mock("./../hooks/useGame", () => {
 	return {
 		useGame: () => {
 			return {
+				room: {
+					room: mockroom,
+				},
 				players: {
 					players: mockplayers,
 				},
@@ -55,7 +61,18 @@ describe("<HUDComponent/ >", () => {
 		expect(mockplayers.length).toBe(2);
 		const deckAmount = screen.getByTestId("hud-deck-amount-second-player");
 		expect(deckAmount).toBeInTheDocument();
-		expect(deckAmount.innerHTML).toBe("1 cartas");
+		expect(deckAmount.innerHTML).toBe("1 carta");
+	});
+
+	it("Should display the room code to share", () => {
+		mockisWaitingSecondPlayer = () => true;
+		render(<HUDComponent />);
+		const waitingForSecondPlayerDiv = screen.getByTestId(
+			"waiting-second-player"
+		);
+		const roomIdDiv = screen.getByTestId("room-id");
+		expect(waitingForSecondPlayerDiv).toBeInTheDocument();
+		expect(roomIdDiv).toHaveTextContent(roomCode);
 	});
 
 	it("Should display it's waiting for a second player to join the game", () => {

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import { useGame } from "../hooks/useGame";
 import "./hudStyle.css";
 
 export function HUDComponent() {
 	const {
+		room,
 		players,
 		currentUser,
 		isCurrentUserTurn,
@@ -24,7 +24,9 @@ export function HUDComponent() {
 								className="deck-amount"
 								data-testId="hud-deck-amount-first-player"
 							>
-								{currentUser.currentUserDeck.length} cartas
+								{currentUser.currentUserDeck.length > 1
+									? `${currentUser.currentUserDeck.length} cartas`
+									: `1 carta`}
 							</span>
 						)}
 				</div>
@@ -52,9 +54,17 @@ export function HUDComponent() {
 						className="waiting-second-player"
 						data-testId="waiting-second-player"
 					>
-						<span className="waiting-player-label blink-animate">
-							Aguardando segundo jogador
-						</span>
+						<div className="share-room">
+							<span>
+								Convide seu oponente compartilhando o código da sala:{" "}
+							</span>
+							<span className="room-code" data-testId="room-id">
+								{room.room.id}
+							</span>
+						</div>
+						<div className="waiting-player-label blink-animate">
+							<span>Aguardando segundo jogador</span>
+						</div>
 					</div>
 				)}
 				<div>
@@ -65,7 +75,9 @@ export function HUDComponent() {
 								className="deck-amount"
 								data-testId="hud-deck-amount-second-player"
 							>
-								{currentUser.currentUserDeck.length} cartas
+								{currentUser.currentUserDeck.length > 1
+									? `${currentUser.currentUserDeck.length} cartas`
+									: `1 carta`}
 							</span>
 						)}
 				</div>

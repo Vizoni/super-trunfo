@@ -12,7 +12,7 @@ header {
 .waiting-second-player {
 	display: flex;
 	justify-content: center;
-	font-size: 4vw;
+	flex-direction: column;
 }
 
 .waiting-player-label {
@@ -20,6 +20,19 @@ header {
 	color: #ce3f3f;
 	text-transform: uppercase;
 	background-color: transparent;
+	font-size: 3vw;
+}
+
+.share-room {
+	text-align: center;
+	color: #8f8c8c;
+	text-transform: uppercase;
+	background-color: transparent;
+	font-size: 1.5vw;
+}
+
+.room-code {
+	color: #000;
 }
 
 .blink-animate {
