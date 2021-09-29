@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Super Trunfo Card Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Play Super Trunfo Card Game just as you were used to play in your childhood! 
+
+# https://super-trunfo-562b3.firebaseapp.com/
 
 ## Available Scripts
 
