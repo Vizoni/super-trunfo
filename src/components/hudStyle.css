@@ -1,0 +1,51 @@
+header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.hud-container {
+	position: relative;
+	height: 10vh;
+	margin: 2vh;
+}
+
+.waiting-second-player {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.waiting-player-label {
+	text-align: center;
+	color: #ce3f3f;
+	text-transform: uppercase;
+	background-color: transparent;
+	font-size: 3vw;
+}
+
+.share-room {
+	text-align: center;
+	color: #8f8c8c;
+	text-transform: uppercase;
+	background-color: transparent;
+	font-size: 1.5vw;
+}
+
+.room-code {
+	color: #000;
+}
+
+.blink-animate {
+	animation: blinkText 0.8s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes blinkText {
+	50% {
+		color: transparent;
+	}
+}
+
+.deck-amount {
+	margin: 1vw;
+}

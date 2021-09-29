@@ -1,65 +1,33 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
-import { database, firebase } from "../services/firebase";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useRoom } from "../hooks/useRoom";
-import { Player } from "../interfaces/Player";
+import { useGame } from "../hooks/useGame";
 
 export function Home() {
 	const history = useHistory();
 
-	const { currentUser, setCurrentUser } = useCurrentUser();
-	const {
-		room,
-		setRoom,
-		createRoom,
-		addSecondPlayer,
-		getRoomById,
-		updateRoom,
-	} = useRoom();
-	const [roomId, setRoomId] = useState<string>();
+	const { createNewRoom, findRoom, joinRoom } = useGame();
+	const [roomId, setRoomId] = useState<string>("");
 
 	async function handleCreateRoom(event: FormEvent) {
 		event.preventDefault();
-
-		const newPlayer: Player = {
-			createdAt: new Date().toISOString().slice(0, 10),
-			deck: [],
-		};
-		const newRoom = {
-			isOpen: true,
-			createdAt: new Date().toISOString().slice(0, 10),
-			playersCounter: 1,
-			players: [],
-			turn: "Player 1",
-		};
-
-		const key = await createRoom(newRoom, newPlayer);
-		setCurrentUser(newPlayer);
+		const roomId = await createNewRoom();
 		history.push({
-			pathname: `/rooms/${key}`,
-			state: { roomId: key },
+			pathname: `/rooms/${roomId}`,
+			state: { roomId: roomId },
 		});
 	}
 
 	async function handleLogin(event: FormEvent) {
 		event.preventDefault();
 		if (!roomId) return;
-		const newPlayer: Player = {
-			createdAt: new Date().toISOString().slice(0, 10),
-			deck: [],
-		};
-		const foundRoom = await getRoomById(roomId);
-		if (!foundRoom.isOpen) {
-			alert("Sala cheia");
-			return;
-		}
+		const foundRoom = await findRoom(roomId);
+		// if (foundRoom.playersCounter == 2) {
+		// 	alert("Sala cheia");
+		// 	return;
+		// }
 		if (foundRoom) {
-			await addSecondPlayer(roomId, newPlayer);
-			setCurrentUser(newPlayer);
-			updateRoom(roomId);
+			await joinRoom(foundRoom);
 			history.push({
 				pathname: `/rooms/${roomId}`,
 				state: { roomId: roomId },
@@ -70,18 +38,43 @@ export function Home() {
 	}
 
 	return (
-		<div>
-			<form onSubmit={handleLogin}>
-				<input
-					type="text"
-					placeholder="Código da sala"
-					value={roomId}
-					onChange={(event) => setRoomId(event.target.value)}
+		<form onSubmit={handleLogin}>
+			<div className="home-page">
+				<img
+					src="../super-trunfo.png"
+					className="logo"
+					alt="Logo Super Trunfo"
 				/>
-				<button type="submit">Entrar na sala</button>
-				<p>ou</p>
-				<button onClick={handleCreateRoom}>Criar Sala</button>
-			</form>
-		</div>
+				<div className="join-room">
+					<input
+						className="font-join input-join"
+						type="text"
+						placeholder="Insira o código da sala"
+						value={roomId}
+						onChange={(event) => setRoomId(event.target.value)}
+						data-testId="input-room-id"
+					/>
+					<button
+						className="font-join btn-join-room"
+						type="submit"
+						data-testId="btn-join-room"
+					>
+						Entrar
+					</button>
+					<div className="or-divider">
+						<span>ou</span>
+					</div>
+					<div className="create-room">
+						<button
+							className="btn-create-room font-join"
+							onClick={handleCreateRoom}
+							data-testId="btn-create-room"
+						>
+							Criar Sala
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
 	);
 }

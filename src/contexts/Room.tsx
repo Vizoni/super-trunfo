@@ -1,49 +1,87 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useHistory } from "react-router-dom";
 
-import { useCurrentUser } from "../hooks/useCurrentUser";
+import { Card } from "../interfaces/Card";
 import { Player } from "../interfaces/Player";
-import { database, firebase } from "../services/firebase";
+import { database } from "../services/firebase";
+import { shuffle } from "../utils/shuffle";
 
 type RoomContextProviderProps = {
 	children: ReactNode;
 };
 
 type Room = {
-	// id: string | undefined;
+	id: string;
 	playersCounter: number;
-	isOpen: boolean;
 	createdAt: string;
-	players: Player[] | undefined;
+	players: Player[];
 	turn: string;
+	deck: Card[];
+	winnerPlayerId: string;
+	cardsComparison: cardsComparison;
+};
+
+type cardsComparison = {
+	isComparingCards: boolean;
+	attributeBeingCompared: string;
+	winnerCardName: string;
+	isComparingSuperTrunfoAgainstCardTypeA: boolean;
 };
 
 type RoomContextType = {
-	room: Room | undefined;
+	room: Room;
 	setRoom: (data: Room) => void;
-	createRoom: (room: Room, newPlayer: Player) => Promise<any>;
-	addSecondPlayer: (roomId: string, newPlayer: Player) => void;
+	createRoom: (room: Room) => Promise<any>;
+	updateRoomWithSecondPlayer: (roomId: string) => void;
 	getRoomById: (id: string) => Promise<any>;
 	updateRoom: (id: string) => void;
+	updateGameTurn: (roomId: string, nextPlayerId: string) => void;
+	updatePlayerDeck: (playerId: string, cards: Card[]) => void;
+	updateRoomWithWinnerPlayer: (winnerPlayerId: string) => void;
+	updateRoomIsComparingCards: (
+		isComparingCards: boolean,
+		attributeBeingCompared: string,
+		winnerCardName: string,
+		isComparingSuperTrunfoAgainstCardTypeA: boolean
+	) => void;
+	removeUser: (user: Player) => void;
 };
 
 export const RoomContext = React.createContext({} as RoomContextType);
 
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
-	const { currentUser } = useCurrentUser();
-	const [room, setRoom] = useState<Room | undefined>();
-	const [players, setPlayers] = useState<Player[] | undefined>();
-
-	useEffect(() => {
-		console.log("ROOM - Context:", room);
-	}, [room]);
+	let history = useHistory();
+	const [room, setRoom] = useState<Room>({
+		id: "",
+		playersCounter: 0,
+		createdAt: "",
+		players: [],
+		turn: "",
+		deck: [],
+		winnerPlayerId: "",
+		cardsComparison: {
+			isComparingCards: false,
+			attributeBeingCompared: "",
+			winnerCardName: "",
+			isComparingSuperTrunfoAgainstCardTypeA: false,
+		},
+	});
 
 	async function updateRoom(key: any) {
-		database.ref(`rooms/${key}`).on("value", (roomRef) => {
+		await database.ref(`rooms/${key}`).on("value", (roomRef) => {
 			if (roomRef.exists()) {
 				setRoom(roomRef.val());
+			} else {
+				// se sala não existe, redireciona pra home
+				history.push({
+					pathname: `/`,
+				});
 			}
 		});
+	}
+
+	async function updateGameTurn(roomId: string, nextPlayerId: string) {
+		await database.ref(`rooms/${roomId}`).update({ turn: nextPlayerId });
 	}
 
 	async function getRoomById(id: string) {
@@ -56,19 +94,57 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 		return roomResponse;
 	}
 
-	async function createRoom(room: Room, newPlayer: Player) {
-		const ref = await database.ref(`rooms/`).push(room);
-		await updateRoom(ref.key);
-		database.ref(`rooms/${ref.key}/players`).push(newPlayer);
-		return ref.key;
+	async function createRoom(room: Room) {
+		const roomId = await database.ref(`rooms/`).push(room).key;
+		await database.ref(`rooms/${roomId}`).update({ id: roomId });
+		return roomId;
 	}
 
-	function addSecondPlayer(roomId: any, newPlayer: Player): void {
-		const updates: any = {};
-		updates["playersCounter"] = 2;
-		updates["isOpen"] = false;
-		database.ref(`rooms/${roomId}`).update(updates);
-		database.ref(`rooms/${roomId}/players`).push(newPlayer);
+	function updateRoomWithSecondPlayer(roomId: any): void {
+		database.ref(`rooms/${roomId}`).update({ playersCounter: 2 });
+	}
+
+	function updatePlayerDeck(playerId: string, cards: Card[]): void {
+		database
+			.ref(`rooms/${room?.id}/players/${playerId}`)
+			.update({ deck: cards });
+	}
+
+	async function updateRoomWithWinnerPlayer(winnerPlayerId: string) {
+		await database
+			.ref(`rooms/${room.id}`)
+			.update({ winnerPlayerId: winnerPlayerId });
+	}
+
+	async function updateRoomIsComparingCards(
+		isComparingCards: boolean,
+		attributeBeingCompared: string,
+		winnerCardName: string,
+		isComparingSuperTrunfoAgainstCardTypeA: boolean
+	) {
+		await database.ref(`rooms/${room.id}`).update({
+			cardsComparison: {
+				isComparingCards: isComparingCards,
+				attributeBeingCompared: attributeBeingCompared,
+				winnerCardName: winnerCardName,
+				isComparingSuperTrunfoAgainstCardTypeA:
+					isComparingSuperTrunfoAgainstCardTypeA,
+			},
+		});
+	}
+
+	async function removeUser(user: Player) {
+		/* pra remover o usuário tem que pegar as cartas dele e devolver pro deck do game, remover o usuário e depois atualizar o contador de players */
+		const currentUserDeckFromDatabase = await (
+			await database.ref(`rooms/${room.id}/players/${user.id}/deck`).get()
+		).val();
+		const finalDeck = currentUserDeckFromDatabase.concat(room.deck);
+		const updateRoomWithDefaultValues = {
+			deck: shuffle(finalDeck),
+			playersCounter: Object.keys(room.players).length,
+		};
+		await database.ref(`rooms/${room.id}`).update(updateRoomWithDefaultValues);
+		await database.ref(`rooms/${room.id}/players/${user.id}`).remove();
 	}
 
 	return (
@@ -77,9 +153,14 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
 				room,
 				setRoom,
 				createRoom,
-				addSecondPlayer,
+				updateRoomWithSecondPlayer,
 				getRoomById,
 				updateRoom,
+				updateGameTurn,
+				updatePlayerDeck,
+				updateRoomWithWinnerPlayer,
+				updateRoomIsComparingCards,
+				removeUser,
 			}}
 		>
 			{children}

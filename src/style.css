@@ -1,0 +1,122 @@
+html,
+body {
+	height: 100%;
+	width: 100%;
+	font-family: Staatliches;
+}
+/* @import url("https://fonts.googleapis.com/css2?family=Karantina&display=swap"); */
+/* @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Karantina&display=swap"); */
+
+/* @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Karantina&family=Staatliches&display=swap"); */
+/* @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Karantinafamily=Patua+One&family=Secular+One&family=Staatliches&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Karantina&family=Patua+One&family=Secular+One&family=Staatliches&display=swap");
+
+.winner-card-label {
+	text-align: center;
+	font-family: monospace;
+	font-weight: 800;
+	font-size: 3em;
+	color: #ce3f3f;
+	animation: blinkText 0.5s;
+	animation-iteration-count: infinite;
+	text-transform: uppercase;
+}
+
+@keyframes blinkText {
+	50% {
+		color: transparent;
+	}
+}
+
+div.home-page {
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #fff;
+	flex-direction: column;
+	font-size: 40px;
+	font-family: Staatliches;
+	padding: 1em 0;
+	position: fixed;
+}
+
+.join-room {
+	width: 75%;
+	text-align: center;
+	border-radius: 2%;
+}
+
+.create-room {
+	margin-bottom: 1em;
+}
+
+.font-join {
+	font-size: 1em;
+	text-transform: uppercase;
+}
+
+.input-join {
+	margin: 1em 1em;
+	width: 75%;
+	text-align: center;
+	font-family: Staatliches;
+}
+
+.btn-join-room {
+	width: 75%;
+	background-color: #3d8dc5;
+	border: 3px solid #3d8dc5;
+	cursor: pointer;
+	font-family: Staatliches;
+}
+
+.btn-create-room {
+	width: 75%;
+	background-color: #c7c5c5;
+	border: 3px solid #c7c5c5;
+	cursor: pointer;
+	font-family: Staatliches;
+}
+
+.or-divider {
+	width: 75%;
+	text-align: center;
+	border-bottom: 1px solid #b4bac0;
+	line-height: 0.1em;
+	margin: 0.7em 12.5%;
+	font-family: Staatliches;
+}
+
+div span {
+	background: #fff;
+	padding: 0 10px;
+}
+
+.logo {
+	width: 40vh;
+	height: auto;
+}
+
+/* -------------------- */
+
+.deck-amount {
+	display: flex;
+	font-size: 1.5rem;
+}
+
+.player-one {
+	justify-content: left;
+}
+
+.player-two {
+	justify-content: right;
+}
+
+/* ---------------- FLIP CONTAINER 2 */
+
+.container {
+	display: flex;
+	justify-content: center;
+}
