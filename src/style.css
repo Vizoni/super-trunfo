@@ -61,6 +61,24 @@ div.home-page {
 	margin: 1em 1em;
 	width: 75%;
 	text-align: center;
+	font-family: system-ui;
+	font-weight: 700;
+	text-transform: none;
+}
+
+::-webkit-input-placeholder {
+	font-family: Staatliches;
+}
+
+:-moz-placeholder {
+	font-family: Staatliches;
+}
+
+::-moz-placeholder {
+	font-family: Staatliches;
+}
+
+:-ms-input-placeholder {
 	font-family: Staatliches;
 }
 
